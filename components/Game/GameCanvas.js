@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, memo } from 'react';
 
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Sky } from '@react-three/drei'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Cylinder, OrbitControls, Sky } from '@react-three/drei'
 
 import { Debug, Physics } from '@react-three/cannon';
 
@@ -33,6 +33,10 @@ import { ModelJToastieBuildingRed } from '@/components/Game/Building Red';
 import { ModelJToastieWoodenFence } from '@/components/Game/Wooden Fence';
 import { ModelJToastieParkBench } from '@/components/Game/Park Bench';
 import SailingShip from './SailingShip';
+import { useOfflineWallet } from '@/hooks/useOfflineWallet';
+import { MeshStandardMaterial } from 'three';
+import { degToRad } from 'three/src/math/MathUtils';
+import SwimmingLane from './SwimmingLane';
 
 function SpotLight(props) {
 
@@ -44,10 +48,55 @@ function SpotLight(props) {
     )
 }
 
+function CameraLogger() {
+    const controlsRef = useRef()
+    const { camera } = useThree()
+
+    const teleportLocation = useStore(state => state.teleportLocation)
+    const setTeleportLocation = useStore(state => state.setTeleportLocation)
+
+    useEffect(() => {
+
+        if (teleportLocation) {
+            console.log("New value detected for teleportLocation", teleportLocation)
+            camera.position.set(...teleportLocation)
+            camera.lookAt(0, 0, 0)
+            setTeleportLocation(false)
+        }
+
+    }, [teleportLocation])
+
+    // useFrame(state => {
+    //     state.camera.lerp({ x, y, z }, 0.1)
+    //     state.camera.lookAt(0, 0, 0)
+    // })
+
+    useFrame(() => {
+
+        // For logging camera position for debugging
+        return
+
+        if (controlsRef.current) {
+            // Logs the camera position every frame
+            console.log(
+                `Camera position: x=${camera.position.x.toFixed(2)}, y=${camera.position.y.toFixed(2)}, z=${camera.position.z.toFixed(2)}`
+            )
+
+            // Optional: Log target too
+            const target = controlsRef.current.target
+            console.log(
+                `Target: x=${target.x.toFixed(2)}, y=${target.y.toFixed(2)}, z=${target.z.toFixed(2)}`
+            )
+        }
+    })
+
+    return <OrbitControls ref={controlsRef} />
+}
+
 function GameCanvas({ scale, children }) {
 
     const {
-        balls, 
+        balls,
         addBall,
         debug,
         setDebug
@@ -60,6 +109,9 @@ function GameCanvas({ scale, children }) {
 
     const [reload, setReload] = useState(false)
 
+    const offlineWallet = useOfflineWallet(state => state.wallet);
+    const setOfflineWallet = useOfflineWallet(state => state.setWallet);
+
     useEffect(() => {
 
         if (reload) {
@@ -70,7 +122,7 @@ function GameCanvas({ scale, children }) {
 
     useHotkeys('3', () => {
         console.log("Ball")
-        addBall()
+        addBall("Online")
         // setBallCount(ballCount + 1)
         // setActiveBalls(prev => [
         //     ...prev,
@@ -78,6 +130,24 @@ function GameCanvas({ scale, children }) {
         //         spawned: Date.now()
         //     }
         // ])
+    });
+
+    useHotkeys('4', () => {
+        console.log("Ball")
+        addBall("Offline")
+        setOfflineWallet({
+            ...offlineWallet,
+            total: (offlineWallet?.total || 0) - 10
+        })
+
+        // setBallCount(ballCount + 1)
+        // setActiveBalls(prev => [
+        //     ...prev,
+        //     {
+        //         spawned: Date.now()
+        //     }
+        // ])
+
     });
 
     useHotkeys('2', () => {
@@ -124,6 +194,7 @@ function GameCanvas({ scale, children }) {
                 <Ball
                     key={item.spawned}
                     ball_key={item.spawned}
+                    item={item}
                 />
             )}
 
@@ -346,12 +417,11 @@ function GameCanvas({ scale, children }) {
                                 args={[100, 8, 0.25]}
                             /> */}
 
-            <group>{[...Array(18)].map((o, i) => <Umbrella key={i} rotation={[Math.PI / 4, 0, 0]} scale={3} color={randomColor()} position={[-80 + (i * 10), -48, 16]} />)}</group>
+            <group>{[...Array(18)].map((o, i) => <Umbrella key={i} rotation={[Math.PI / 4, 0, 0]} scale={3} color={randomColor()} position={[-200 + (i * 23), -48, 16]} />)}</group>
 
-            <group>{[...Array(19)].map((o, i) => <Umbrella key={i} rotation={[Math.PI / 4, 0, 0]} scale={3} color={randomColor()} position={[-86 + (i * 10), -58, 23]} />)}</group>
+            <group>{[...Array(19)].map((o, i) => <Umbrella key={i} rotation={[Math.PI / 4, 0, 0]} scale={3} color={randomColor()} position={[-180 + (i * 21), -62, 26]} />)}</group>
 
-            {/* <Umbrella rotation={[Math.PI / 4, 0, 0]} scale={3} color="red" position={[0, -40, 15]} />
-                            <Umbrella rotation={[Math.PI / 4, 0, 0]} scale={3} color="limegreen" position={[10, -40, 15]} /> */}
+            <SwimmingLane />
 
         </>
     )
@@ -402,7 +472,9 @@ function GameCanvas({ scale, children }) {
 
                     </Physics>
 
-                    <OrbitControls />
+                    {/* <OrbitControls /> */}
+
+                    <CameraLogger />
 
                 </Canvas>
             }

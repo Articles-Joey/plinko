@@ -10,12 +10,16 @@ import { useStore } from '@/hooks/useStore';
 import axios from 'axios';
 import { useWallet } from '@/hooks/useWallet';
 import generateRandomInteger from '@/hooks/generateRandomInteger';
+import { useOfflineWallet } from '@/hooks/useOfflineWallet';
 
 const Ball = (props) => {
 
-    const { ball_key, activeBalls } = props
+    const { ball_key, activeBalls, item } = props
 
     const { wallet, setWallet, addTotal } = useWallet()
+
+    const offlineWallet = useOfflineWallet(state => state.wallet);
+    const setOfflineWallet = useOfflineWallet(state => state.setWallet);
 
     // const userReduxState = useSelector((state) => state.auth.user_details)
     const userReduxState = false
@@ -34,6 +38,9 @@ const Ball = (props) => {
         restitution: 0.8,
         velocity: [0, startVelocity, 0],
         angularVelocity: angularVelocity,
+        userData: {
+            type: item.type,
+        },
         onCollide: (e) => {
 
             if (e?.contact) {
@@ -48,34 +55,53 @@ const Ball = (props) => {
             }
 
             if (e?.body?.userData?.score || e?.body?.userData?.score === 0) {
+
                 console.log("score", e?.body?.userData?.score)
 
-                if (userReduxState?._id) {
+                if (item.type === "Online") {
 
-                    axios.post('/api/user/community/games/plinko/ball/score', {
-                        ball_key,
-                        score: e?.body?.userData?.score
-                    })
-                        .then(response => {
+                    if (userReduxState?._id) {
 
-                            console.log(response.data)
-                            setWallet({
-                                ...wallet,
-                                total: response.data.total
+                        axios.post('/api/user/community/games/plinko/ball/score', {
+                            ball_key,
+                            score: e?.body?.userData?.score
+                        })
+                            .then(response => {
+
+                                console.log(response.data)
+                                setWallet({
+                                    ...wallet,
+                                    total: response.data.total
+                                })
+                                removeBall(ball_key)
+
                             })
-                            removeBall(ball_key)
+                            .catch(response => {
+                                console.log(response.data)
+                            })
 
-                        })
-                        .catch(response => {
-                            console.log(response.data)
-                        })
+                    } else {
 
-                } else {
+                        // No offline in online plays
+                        // addTotal(100)
+                        // removeBall(ball_key)
 
-                    addTotal(100)
+                    }
+
+                }
+
+                if (item.type === "Offline") {
+
+                    setOfflineWallet({
+                        ...offlineWallet,
+                        total: offlineWallet?.total + e?.body?.userData?.score
+                    })
+
                     removeBall(ball_key)
 
                 }
+
+
             }
 
         }

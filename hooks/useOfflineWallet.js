@@ -1,9 +1,9 @@
 // import { create } from 'zustand'
 import { createWithEqualityFn as create } from 'zustand/traditional'
 
-export const useWallet = create((set) => ({
+export const useOfflineWallet = create((set) => ({
     wallet: {
-        total: 0
+        total: 100
     },
     lastClaim: null,
     setLastClaim: (newValue) => {

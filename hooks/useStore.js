@@ -8,14 +8,16 @@ export const useStore = create()(
 
             darkMode: true,
             toggleDarkMode: () => set({ darkMode: !get().darkMode }),
+            setDarkMode: (mode) => set({ darkMode: mode }),
 
             balls: [],
-            addBall: () => {
+            addBall: (type) => {
                 set((prev) => ({
                     balls: [
                         ...prev.balls,
                         {
-                            spawned: Date.now()
+                            spawned: Date.now(),
+                            type
                         }
                     ]
                 }))
@@ -34,6 +36,16 @@ export const useStore = create()(
                     debug: !prev.debug
                 }))
             },
+
+            teleportLocation: false,
+            setTeleportLocation: (location) => {
+                set({ teleportLocation: location })
+            },
+
+            menuOpen: false,
+            setMenuOpen: (open) => {
+                set({ menuOpen: open })
+            }
 
         }),
         {

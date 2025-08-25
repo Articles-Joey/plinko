@@ -6,10 +6,11 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    min-height: calc(100vh - 50px);
+    // min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 0px);
     // padding: 1rem;
 
-    --top-position: 50px;
+    --top-position: 0px;
 
     @include media-breakpoint-up(lg) {
         flex-direction: row;
@@ -78,28 +79,52 @@
 
     .menu-card {
         background-color: var(--card-background);
+        border-bottom: 1px solid black;
 
         @include media-breakpoint-down(lg) {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             position: fixed;
-            width: 100%;
+            // width: 100%;
             height: calc(100vh - 100px);
+            height: calc(100vh - 30%);
             overflow-y: auto;
             // top: var(--top-position);
             bottom: 50px;
-            left: 0;
-            transform: translateX(-100%);
+            left: 50px;
+            right: 50px;
+            transform: translateY(110%);
             transition-duration: 200ms;
             z-index: 10;
         }
 
-        @include media-breakpoint-up(lg) {
+        .wrap {
+            padding: 1rem;
+            overflow-y: auto;
+
+            @include media-breakpoint-up(lg) {
+                padding: 0.5rem;
+            }
+
+            &::-webkit-scrollbar {
+                width: 10px;
+                // background-color: #04abf4;
+                background-color: #ffdf01;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                // background-color: #01628b;
+                background-color: #e48019;
+                border-radius: 5px;
+                box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.5) inset;
+            }
         }
 
+        @include media-breakpoint-up(lg) {}
+
         &.show {
-            transform: translateX(0%);
+            transform: translateY(0%);
         }
 
         @include media-breakpoint-up(lg) {
@@ -122,6 +147,16 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
+        .card-header {
+            display: flex;
+            align-items: center;
+
+            h6 {
+                font-size: 0.8rem;
+            }
+
+        }
+
     }
 
     .menu-bar {
@@ -133,7 +168,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 2;
+        z-index: 11;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 0.1rem 0.5rem;
 
         @include media-breakpoint-up(lg) {
             display: none;
@@ -193,6 +230,7 @@
             @include media-breakpoint-up(lg) {
                 margin-top: 3rem;
             }
+
             // position: absolute;
             // top: 1rem;
             // left: 1rem;
