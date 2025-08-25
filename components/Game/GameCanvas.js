@@ -37,6 +37,7 @@ import { useOfflineWallet } from '@/hooks/useOfflineWallet';
 import { MeshStandardMaterial } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import SwimmingLane from './SwimmingLane';
+import { ModelQuaterniusFishingClownfish } from './Clownfish';
 
 function SpotLight(props) {
 
@@ -91,6 +92,45 @@ function CameraLogger() {
     })
 
     return <OrbitControls ref={controlsRef} />
+}
+
+function BeachSides() {
+    return (
+        <group
+            position={[210, -60, 25]}
+            rotation={[0, Math.PI / 2, 0]}
+            scale={5}
+        >
+        <mesh>
+            <bufferGeometry>
+                <bufferAttribute
+                    attach="attributes-position"
+                    array={new Float32Array([
+                        0, 0, 0,    // Point 1
+                        5, 0, 0,    // Point 2
+                        5, 5, 0,    // Point 3
+                        0, 5, 0,    // Point 4
+                        2.5, 2.5, 2 // Point 5 (raised center)
+                    ])}
+                    count={5}
+                    itemSize={3}
+                />
+                {/* <bufferAttribute
+                    attach="attributes-index"
+                    array={new Uint16Array([
+                        0, 1, 4,
+                        1, 2, 4,
+                        2, 3, 4,
+                        3, 0, 4
+                    ])}
+                    count={12}
+                    itemSize={1}
+                /> */}
+            </bufferGeometry>
+            <meshStandardMaterial color="orange" side={2} />
+        </mesh>
+        </group>
+    )
 }
 
 function GameCanvas({ scale, children }) {
@@ -374,7 +414,6 @@ function GameCanvas({ scale, children }) {
             // removeBall={removeBall}
             />
 
-
             <Docks />
 
             {/* <BeachPlane /> */}
@@ -422,6 +461,16 @@ function GameCanvas({ scale, children }) {
             <group>{[...Array(19)].map((o, i) => <Umbrella key={i} rotation={[Math.PI / 4, 0, 0]} scale={3} color={randomColor()} position={[-180 + (i * 21), -62, 26]} />)}</group>
 
             <SwimmingLane />
+
+            <group position={[130, 10, 0]}>
+                <ModelQuaterniusFishingClownfish
+                    // position={[130, 250, 200]}
+                    rotation={[Math.PI / 2, 0, 0]}
+                    scale={5}
+                />
+            </group>
+
+            <BeachSides />
 
         </>
     )

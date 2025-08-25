@@ -24,10 +24,11 @@ export default function SailingShip() {
       <group
         ref={groupRef}
         rotation={[0, 0, degToRad(-90)]}
-        position={[-50, 80, 0]} // Start at -50
+        position={[-50, 90, 0]} // Start at -50
       >
         <ModelKennyNLPirateShipDark scale={3} rotation={[degToRad(90), 0, 0]} />
         <ModelKennyNLPirateShipDark scale={3} position={[-15, -10, 0]} rotation={[degToRad(90), 0, 0]} />
+        <ModelKennyNLPirateShipDark scale={3} position={[-30, 0, 0]} rotation={[degToRad(90), 0, 0]} />
       </group>
     );
   }

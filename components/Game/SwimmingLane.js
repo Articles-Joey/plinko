@@ -9,7 +9,7 @@ export default function SwimmingLane() {
     return (
         <group
             rotation={[0, 0, Math.PI / 2]}
-            position={[20, 0, 0]}
+            position={[20, 0, -0.6]}
         >
 
             <Cylinder

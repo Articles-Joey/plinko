@@ -92,9 +92,11 @@ const Ball = (props) => {
 
                 if (item.type === "Offline") {
 
+                    const offlineWallet = useOfflineWallet.getState().wallet;
+
                     setOfflineWallet({
                         ...offlineWallet,
-                        total: offlineWallet?.total + e?.body?.userData?.score
+                        total: offlineWallet?.total + (10 * e?.body?.userData?.score)
                     })
 
                     removeBall(ball_key)
