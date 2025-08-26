@@ -4,7 +4,7 @@ import { useTexture } from "@react-three/drei"
 
 export default function StoneWall(props) {
 
-    const base_link = `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}games/US Tycoon/Textures/StoneBricksSplitface001/`
+    const base_link = `${process.env.NEXT_PUBLIC_CDN}games/US Tycoon/Textures/StoneBricksSplitface001/`
 
     const texture = useTexture({
         map: `${base_link}StoneBricksSplitface001_COL_1K.jpg`,
