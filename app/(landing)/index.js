@@ -71,6 +71,9 @@ export default function PlinkoPage(props) {
     const darkMode = useStore(state => state.darkMode)
     const setDarkMode = useStore(state => state.setDarkMode)
 
+    const theme = useStore(state => state.theme);
+    const setTheme = useStore(state => state.setTheme);
+
     const menuOpen = useStore(state => state.menuOpen)
     const setMenuOpen = useStore(state => state.setMenuOpen)
 
@@ -336,7 +339,7 @@ export default function PlinkoPage(props) {
                                 title={
                                     <span>
                                         <i className="fad fa-eyedropper"></i>
-                                        <span>Theme: {darkMode ? 'Dark' : 'Light'}</span>
+                                        <span>Theme: {theme == "Dark" ? 'Dark' : 'Light'}</span>
                                         {/* <span>{darkMode ? 'On' : 'Off'}</span> */}
                                     </span>
                                 }
@@ -351,7 +354,8 @@ export default function PlinkoPage(props) {
                                             <Dropdown.Item
                                                 key={location}
                                                 onClick={() => {
-                                                    setDarkMode(location)
+                                                    // setDarkMode(location)
+                                                    setTheme(theme == "Dark" ? "Light" : "Dark")
                                                 }}
                                                 className="d-flex justify-content-between"
                                             >

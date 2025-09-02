@@ -10,6 +10,9 @@ export const useStore = create()(
             toggleDarkMode: () => set({ darkMode: !get().darkMode }),
             setDarkMode: (mode) => set({ darkMode: mode }),
 
+            theme: null,
+            setTheme: (theme) => set({ theme }),
+
             balls: [],
             addBall: (type) => {
                 set((prev) => ({

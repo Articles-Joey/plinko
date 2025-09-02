@@ -30,7 +30,7 @@ export default function SwimmingLane() {
 
             {[...Array(7)].map((o, top_i) =>
 
-                <>
+                <group key={top_i}>
 
                     <>
                         {[...Array(18)].map((o, i) =>
@@ -58,7 +58,7 @@ export default function SwimmingLane() {
                         )}
                     </>
 
-                </>
+                </group>
 
             )}
 

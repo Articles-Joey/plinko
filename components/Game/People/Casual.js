@@ -17,13 +17,38 @@ export function Model(props) {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions } = useAnimations(animations, group)
+
+  //   useEffect(() => {
+
+  //     console.log("Actions", actions)
+
+  //     actions[`Idle`].play();
+
+  // }, [actions]);
+
   useEffect(() => {
 
-    console.log("Actions", actions)
+    // Play the requested action (or Idle). If `startOffset` is provided it will set
+    // the action's time so multiple instances can be out-of-sync.
+    if (!actions) return;
 
-    actions[`Idle`].play();
+    const actionName = props.action || 'Idle'
+    const act = actions[actionName]
+    if (act) {
+      if (typeof props.startOffset === 'number') {
+        // clamp to [0, duration) if duration available
+        const duration = act.getClip ? (act.getClip().duration || 0) : (act._clip ? act._clip.duration : 0)
+        if (duration > 0) {
+          act.time = Math.max(0, Math.min(props.startOffset, duration - 0.0001))
+        } else {
+          act.time = props.startOffset
+        }
+      }
+      act.play()
+    }
 
-}, [actions]);
+  }, [actions, props.action, props.startOffset])
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">

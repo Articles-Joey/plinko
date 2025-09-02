@@ -38,6 +38,8 @@ import { MeshStandardMaterial } from 'three';
 import { degToRad } from 'three/src/math/MathUtils';
 import SwimmingLane from './SwimmingLane';
 import { ModelQuaterniusFishingClownfish } from './Clownfish';
+import LightpostSingle from './LightpostSingle';
+import WalkingCrowd from './WalkingCrowd';
 
 function SpotLight(props) {
 
@@ -101,21 +103,21 @@ function BeachSides() {
             rotation={[0, Math.PI / 2, 0]}
             scale={5}
         >
-        <mesh>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    array={new Float32Array([
-                        0, 0, 0,    // Point 1
-                        5, 0, 0,    // Point 2
-                        5, 5, 0,    // Point 3
-                        0, 5, 0,    // Point 4
-                        2.5, 2.5, 2 // Point 5 (raised center)
-                    ])}
-                    count={5}
-                    itemSize={3}
-                />
-                {/* <bufferAttribute
+            <mesh>
+                <bufferGeometry>
+                    <bufferAttribute
+                        attach="attributes-position"
+                        array={new Float32Array([
+                            0, 0, 0,    // Point 1
+                            5, 0, 0,    // Point 2
+                            5, 5, 0,    // Point 3
+                            0, 5, 0,    // Point 4
+                            2.5, 2.5, 2 // Point 5 (raised center)
+                        ])}
+                        count={5}
+                        itemSize={3}
+                    />
+                    {/* <bufferAttribute
                     attach="attributes-index"
                     array={new Uint16Array([
                         0, 1, 4,
@@ -126,9 +128,9 @@ function BeachSides() {
                     count={12}
                     itemSize={1}
                 /> */}
-            </bufferGeometry>
-            <meshStandardMaterial color="orange" side={2} />
-        </mesh>
+                </bufferGeometry>
+                <meshStandardMaterial color="orange" side={2} />
+            </mesh>
         </group>
     )
 }
@@ -305,6 +307,8 @@ function GameCanvas({ scale, children }) {
                 />
             </group>
 
+            <WalkingCrowd />
+
             {/* BoardwalkBuildings */}
             <group
                 position={[200, -100, 34.5]}
@@ -321,7 +325,30 @@ function GameCanvas({ scale, children }) {
                         <ModelJToastieBuildingRed />
                     </group>
                 ))}
+            </group>
 
+            {/* Boardwalk Lights */}
+            <group position={[-200, 0, 0]}>
+                {[...Array(21)].map((_, index) => (
+                    <group
+                        key={index}
+                        position={[index * 20, -75, 34.5]} // Increment x-position by 1 for each building
+                        rotation={[-Math.PI / -2, degToRad(0), 0]}
+                        scale={[8, 10, 8]}
+                    >
+
+                        <LightpostSingle />
+
+                        <pointLight
+                            position={[0, 1.3, 0]}
+                            intensity={100}
+                            distance={100}
+                            color={'yellow'}
+                            castShadow
+                        />
+
+                    </group>
+                ))}
             </group>
 
             {/* Boardwalk Railings */}
@@ -488,17 +515,19 @@ function GameCanvas({ scale, children }) {
         )
     }
 
+    const theme = useStore(state => state.theme);
+
     return (
         <>
             {!reload &&
                 <Canvas camera={{ position: [0, 20, 180], fov: 50 }}>
 
-                    <hemisphereLight color="white" groundColor="black" intensity={1} />
+                    <hemisphereLight color="gray" groundColor="black" intensity={theme === "Dark" ? 0.5 : 1} />
 
-                    <ambientLight intensity={2} />
+                    <ambientLight intensity={theme === "Dark" ? 0 : 2} />
 
                     <SpotLight
-                        position={[0, 50, 300]}
+                        position={theme === "Dark" ? [0, -100, 600] : [0, 50, 300]}
                     // angle={1} 
                     // penumbra={1}
                     />
