@@ -14,8 +14,8 @@ import Logo from '@/app/icon.png';
 
 // import ROUTES from '@/components/constants/routes';
 
-import Countdown from 'react-countdown';
-import { add, differenceInHours, format } from 'date-fns';
+// import Countdown from 'react-countdown';
+// import { add, differenceInHours, format } from 'date-fns';
 
 import ArticlesButton from '@/components/UI/Button';
 import useFullscreen from '@/hooks/useFullScreen';
@@ -28,7 +28,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import OfflineBalance from '@/components/UI/OfflineBalance';
 import OnlineBalance from '@/components/UI/OnlineBalance';
-import { useThree } from '@react-three/fiber';
+import classNames from 'classnames';
+// import { useThree } from '@react-three/fiber';
 
 // const Ad = dynamic(() => import('components/Ads/Ad'), {
 //     ssr: false,
@@ -68,8 +69,8 @@ export default function PlinkoPage(props) {
     // const teleportLocation = useStore(state => state.teleportLocation)
     const setTeleportLocation = useStore(state => state.setTeleportLocation)
 
-    const darkMode = useStore(state => state.darkMode)
-    const setDarkMode = useStore(state => state.setDarkMode)
+    // const darkMode = useStore(state => state.darkMode)
+    // const setDarkMode = useStore(state => state.setDarkMode)
 
     const theme = useStore(state => state.theme);
     const setTheme = useStore(state => state.setTheme);
@@ -77,25 +78,20 @@ export default function PlinkoPage(props) {
     const menuOpen = useStore(state => state.menuOpen)
     const setMenuOpen = useStore(state => state.setMenuOpen)
 
+    const showSidebar = useStore(state => state.showSidebar);
+    const setShowSidebar = useStore(state => state.setShowSidebar);
+
     // const { 
     //     balls, 
     //     removeBall, 
     //     addBall 
     // } = useStore()
 
-    const {
-        balls,
-        // removeBall, 
-        addBall,
-        debug,
-        setDebug
-    } = useStore(state => ({
-        balls: state.balls,
-        // removeBall: state.removeBall,
-        addBall: state.addBall,
-        debug: state.debug,
-        setDebug: state.setDebug
-    }));
+    const balls = useStore(state => state.balls);
+    // const removeBall = useStore(state => state.removeBall);
+    const addBall = useStore(state => state.addBall);
+    const debug = useStore(state => state.debug);
+    const setDebug = useStore(state => state.setDebug);
 
     // const [lastClaim, setLastClaim] = useState(null)
 
@@ -177,15 +173,25 @@ export default function PlinkoPage(props) {
 
     }
 
-
-
     return (
-        <div className='plinko-game-page' id={'plinko-game'}>
+        <div 
+        className={
+            classNames(
+                'plinko-game-page',
+                { 'show-sidebar': showSidebar }
+            )
+        } 
+        id={'plinko-game'}
+        >
 
-            <div className={`menu-card ${menuOpen && 'show'}`}>
+            <div className={`menu-floating-button`}>
 
-               <div className='wrap'>
-                
+            </div>
+
+            <div className={`menu-card ${menuOpen && 'show'} ${showSidebar ? 'sidebar' : 'no-sidebar'}`}>
+
+                <div className='wrap'>
+
                     <div className='w-100 mb-0'>
                         <div style={{ display: 'flex', alignItems: 'end' }} className='mb-1'>
                             <Image src={Logo.src} alt="Plinko Logo" width={50} height={50} />
@@ -193,9 +199,9 @@ export default function PlinkoPage(props) {
                         </div>
                         <p>Welcome to the Plinko game! Drop your chips and see where they land.</p>
                     </div>
-    
+
                     <div className='mb-3 d-flex flex-wrap'>
-    
+
                         {/* <Link href={ROUTES.GAMES} className='w-50'>
                             <ArticlesButton
                                 small
@@ -205,7 +211,7 @@ export default function PlinkoPage(props) {
                                 <span>Leave Game</span>
                             </ArticlesButton>
                         </Link> */}
-    
+
                         <ArticlesButton
                             small
                             className="w-50"
@@ -222,7 +228,7 @@ export default function PlinkoPage(props) {
                             {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
                             <span>Fullscreen</span>
                         </ArticlesButton>
-    
+
                         <ArticlesButton
                             small
                             className="w-50"
@@ -232,7 +238,7 @@ export default function PlinkoPage(props) {
                         >
                             <span>Reload Game</span>
                         </ArticlesButton>
-    
+
                         <div className='w-50'>
                             <DropdownButton
                                 variant="articles w-100"
@@ -247,9 +253,9 @@ export default function PlinkoPage(props) {
                                     </span>
                                 }
                             >
-    
+
                                 <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-    
+
                                     {[
                                         false,
                                         true
@@ -265,12 +271,12 @@ export default function PlinkoPage(props) {
                                                 {location ? 'True' : 'False'}
                                             </Dropdown.Item>
                                         )}
-    
+
                                 </div>
-    
+
                             </DropdownButton>
                         </div>
-    
+
                         <div className='w-50'>
                             <DropdownButton
                                 variant="articles w-100"
@@ -285,9 +291,9 @@ export default function PlinkoPage(props) {
                                     </span>
                                 }
                             >
-    
+
                                 <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-    
+
                                     {[
                                         {
                                             name: 'Birds Eye View',
@@ -315,7 +321,7 @@ export default function PlinkoPage(props) {
                                                     // const { camera } = useThree();
                                                     // camera.position.set(...location.position);
                                                     // camera.lookAt(0, 0, 0);
-    
+
                                                     setTeleportLocation(location.position);
                                                     setMenuOpen(false)
                                                 }}
@@ -324,9 +330,9 @@ export default function PlinkoPage(props) {
                                                 {location.name}
                                             </Dropdown.Item>
                                         )}
-    
+
                                 </div>
-    
+
                             </DropdownButton>
                         </div>
 
@@ -344,9 +350,9 @@ export default function PlinkoPage(props) {
                                     </span>
                                 }
                             >
-    
+
                                 <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-    
+
                                     {[
                                         true, false
                                     ]
@@ -362,51 +368,62 @@ export default function PlinkoPage(props) {
                                                 {location ? 'Dark' : 'Light'}
                                             </Dropdown.Item>
                                         )}
-    
+
                                 </div>
-    
+
                             </DropdownButton>
                         </div>
-    
-                        <Link
-                            href="https://github.com/Articles-Joey/plinko"
+
+                        <ArticlesButton
+                            small
                             className="w-50"
-                            target='_blank'
-                            rel="noopener noreferrer"
+                            onClick={() => {
+                                setShowSidebar(!showSidebar)
+                            }}
                         >
-                            <ArticlesButton
-                                small
-                                className="w-100"
-                                onClick={() => {
-                                    reloadScene()
-                                }}
-                            >
-                                <i className="fab fa-github"></i>
-                                <span>GitHub</span>
-                            </ArticlesButton>
-                        </Link>
-    
+                            <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i>
+                            <span>Sidebar: {showSidebar ? 'On' : 'Off'}</span>
+                        </ArticlesButton>
+
                     </div>
-    
+
                     {/* <NoSessionCard
                         text={'Please sign in to access a user balance and have your score on the leaderboard.'}
                         className="mb-2"
                         autoShow
                     /> */}
-    
+
                     <OnlineBalance
                         redeemBall={redeemBall}
                     />
-    
+
                     <OfflineBalance
                     // redeemBall={redeemBall}
                     />
-    
+
                     {/* TODO */}
                     {/* <GameScoreboard game="Plinko" /> */}
 
-               </div>
-              
+                    <Link
+                        href="https://github.com/Articles-Joey/plinko"
+                        className="w-50"
+                        target='_blank'
+                        rel="noopener noreferrer"
+                    >
+                        <ArticlesButton
+                            small
+                            className="w-100"
+                            onClick={() => {
+                                reloadScene()
+                            }}
+                        >
+                            <i className="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </ArticlesButton>
+                    </Link>
+
+                </div>
+
 
             </div>
 

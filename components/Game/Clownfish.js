@@ -8,10 +8,14 @@ import React from 'react'
 import { useGraph, useFrame } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
+import { useStore } from '@/hooks/useStore'
 
 const link = `models/Clownfish.glb`
 
 export function ModelQuaterniusFishingClownfish(props) {
+
+  const theme = useStore(state => state.theme);
+
   const group = React.useRef()
   const { scene, animations } = useGLTF(link)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -39,6 +43,7 @@ export function ModelQuaterniusFishingClownfish(props) {
           <skinnedMesh name="Cube029_3" geometry={nodes.Cube029_3.geometry} material={materials.Eyes} skeleton={nodes.Cube029_3.skeleton} />
         </group>
       </group>
+
     </group>
   )
 }

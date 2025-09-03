@@ -14,7 +14,7 @@ const fetcher = (params) =>
 const useUserDetails = (params) => {
 
     const { data, error, isLoading, mutate } = useSWR(        
-        params.token ?
+        params?.token ?
             {
                 // url: "/api/details",
                 url: "http://localhost:3012/api/auth/session",

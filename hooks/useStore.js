@@ -6,6 +6,14 @@ export const useStore = create()(
     persist(
         (set, get) => ({
 
+            // Only available on larger screens
+            showSidebar: true,
+            setShowSidebar: (newValue) => {
+                set((prev) => ({
+                    showSidebar: newValue
+                }))
+            },
+
             darkMode: true,
             toggleDarkMode: () => set({ darkMode: !get().darkMode }),
             setDarkMode: (mode) => set({ darkMode: mode }),

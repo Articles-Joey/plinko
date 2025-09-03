@@ -1,8 +1,8 @@
 // import { useOfflineWallet } from "@/hooks/useOfflineWallet";
 import { useStore } from "@/hooks/useStore";
 // import ArticlesSignInButton from "../ArticlesSignInButton";
-import useUserToken from "@/hooks/user/useUserToken";
-import useUserDetails from "@/hooks/user/useUserDetails";
+import useUserToken from "@/hooks/user/useUserToken.js";
+import useUserDetails from "@/hooks/user/useUserDetails.js";
 import ArticlesButton from "@/components/UI/Button";
 
 import Countdown from 'react-countdown';

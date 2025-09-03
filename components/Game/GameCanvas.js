@@ -137,17 +137,12 @@ function BeachSides() {
 
 function GameCanvas({ scale, children }) {
 
-    const {
-        balls,
-        addBall,
-        debug,
-        setDebug
-    } = useStore(state => ({
-        balls: state.balls,
-        addBall: state.addBall,
-        debug: state.debug,
-        setDebug: state.setDebug
-    }));
+    const theme = useStore(state => state.theme)
+    // setTheme = useStore(state => state.setTheme)
+    const balls = useStore(state => state.balls)
+    const addBall = useStore(state => state.addBall)
+    const debug = useStore(state => state.debug)
+    // setDebug = useStore(state => state.setDebug);
 
     const [reload, setReload] = useState(false)
 
@@ -276,6 +271,75 @@ function GameCanvas({ scale, children }) {
                     rotation={[-Math.PI / -2, 0, 0]}
                     scale={2.5}
                 />
+
+                {/* Boardwalk Lights */}
+                <group>
+                    <group position={[-96, -5, 0]}>
+                        {[...Array(5)].map((_, index) => (
+                            <group
+                                key={index}
+                                position={[0, index * 17, 0]} // Increment x-position by 1 for each building
+                                rotation={[-Math.PI / -2, degToRad(-90), 0]}
+                                scale={[8, 10, 8]}
+                            >
+
+                                <LightpostSingle />
+
+                                {theme == "Dark" && <>
+                                    <pointLight
+                                        position={[0, 1, 0.5]}
+                                        intensity={100}
+                                        distance={100}
+                                        color={'yellow'}
+                                        castShadow
+                                    />
+
+                                    <pointLight
+                                        position={[0, 1, 0]}
+                                        intensity={100}
+                                        distance={100}
+                                        color={'yellow'}
+                                        castShadow
+                                    />
+                                </>}
+
+                            </group>
+                        ))}
+                    </group>
+                    <group position={[-4, -5, 0]}>
+                        {[...Array(5)].map((_, index) => (
+                            <group
+                                key={index}
+                                position={[0, index * 17, 0]} // Increment x-position by 1 for each building
+                                rotation={[-Math.PI / -2, degToRad(90), 0]}
+                                scale={[8, 10, 8]}
+                            >
+
+                                <LightpostSingle />
+
+                                {theme == "Dark" && <>
+                                    <pointLight
+                                        position={[0, 1, 0.5]}
+                                        intensity={100}
+                                        distance={100}
+                                        color={'yellow'}
+                                        castShadow
+                                    />
+
+                                    <pointLight
+                                        position={[0, 1, 0]}
+                                        intensity={100}
+                                        distance={100}
+                                        color={'yellow'}
+                                        castShadow
+                                    />
+                                </>}
+
+                            </group>
+                        ))}
+                    </group>
+                </group>
+
             </group>
 
             {/* On Beach */}
@@ -339,13 +403,23 @@ function GameCanvas({ scale, children }) {
 
                         <LightpostSingle />
 
-                        <pointLight
-                            position={[0, 1.3, 0]}
-                            intensity={100}
-                            distance={100}
-                            color={'yellow'}
-                            castShadow
-                        />
+                        {theme == "Dark" && <>
+                            <pointLight
+                                position={[0, 1, 0.5]}
+                                intensity={100}
+                                distance={100}
+                                color={'yellow'}
+                                castShadow
+                            />
+
+                            <pointLight
+                                position={[0, 1, 0]}
+                                intensity={100}
+                                distance={100}
+                                color={'yellow'}
+                                castShadow
+                            />
+                        </>}
 
                     </group>
                 ))}
@@ -495,6 +569,15 @@ function GameCanvas({ scale, children }) {
                     rotation={[Math.PI / 2, 0, 0]}
                     scale={5}
                 />
+                {theme == "Dark" &&
+                    <pointLight
+                        position={[0, -9, 10]}
+                        intensity={2000}
+                        distance={20}
+                        color="orange"
+                        castShadow
+                    />
+                }
             </group>
 
             <BeachSides />
@@ -514,8 +597,6 @@ function GameCanvas({ scale, children }) {
             gameContent
         )
     }
-
-    const theme = useStore(state => state.theme);
 
     return (
         <>

@@ -22,6 +22,30 @@
         --top-position: 0px;
     }
 
+    &.show-sidebar {
+        .menu-card {
+            @include media-breakpoint-up(lg) {
+                display: initial;
+                // position: fixed;
+                // bottom: 0;
+                // left: 0;
+                // top: 50px;
+                flex-shrink: 0;
+                width: 300px;
+                // margin: 1rem;
+                padding: 1rem;
+                font-size: 0.8rem;
+                height: calc(100vh - var(--top-position));
+            }
+        }
+
+        .menu-bar {
+            @include media-breakpoint-up(lg) {
+                display: none;
+            }
+        }
+    }
+
     .background {
         // background-repeat: repeat;
         // opacity: 0.25;
@@ -81,7 +105,7 @@
         background-color: var(--card-background);
         border-bottom: 1px solid black;
 
-        @include media-breakpoint-down(lg) {
+        &.no-sidebar {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -98,6 +122,32 @@
             transition-duration: 200ms;
             z-index: 10;
         }
+
+        &.sidebar {
+
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: flex-end;
+            // position: fixed;
+            // // width: 100%;
+            // height: calc(100vh - 100px);
+            // height: calc(100vh - 30%);
+            // overflow-y: auto;
+            // // top: var(--top-position);
+            // bottom: 50px;
+            // left: 50px;
+            // right: 50px;
+            // transform: translateY(110%);
+            // transition-duration: 200ms;
+            // z-index: 10;
+            // @include media-breakpoint-up(lg) {
+            //     display: none;
+            // }
+        }
+
+        // @include media-breakpoint-up(lg) {
+        //     display: none;
+        // }
 
         .wrap {
             padding: 1rem;
@@ -121,24 +171,8 @@
             }
         }
 
-        @include media-breakpoint-up(lg) {}
-
         &.show {
             transform: translateY(0%);
-        }
-
-        @include media-breakpoint-up(lg) {
-            display: initial;
-            // position: fixed;
-            // bottom: 0;
-            // left: 0;
-            // top: 50px;
-            flex-shrink: 0;
-            width: 300px;
-            // margin: 1rem;
-            padding: 1rem;
-            font-size: 0.8rem;
-            height: calc(100vh - var(--top-position));
         }
 
         .camera-controls {
@@ -172,9 +206,9 @@
         background-color: rgba(255, 255, 255, 0.5);
         padding: 0.1rem 0.5rem;
 
-        @include media-breakpoint-up(lg) {
-            display: none;
-        }
+        // @include media-breakpoint-up(lg) {
+        //     display: none;
+        // }
     }
 
     .game-content {

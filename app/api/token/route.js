@@ -16,6 +16,10 @@ export async function GET(req) {
 
         const session_token = cookieStore.get('sess')?.value
 
+        if (!session_token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const oauth_token = session_token;
 
         return NextResponse.json(session_token, { status: 200 });
