@@ -5,9 +5,10 @@ Files: models\Beach.gltf [3.17MB] > E:\Downloads\men\output\Beach-transformed.gl
 */
 
 import React, { useEffect } from 'react'
-import { useGraph } from '@react-three/fiber'
+import { useGraph, useThree, useFrame } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
+import { Vector3 } from 'three'
 
 const link = `${process.env.NEXT_PUBLIC_CDN}games/Assets/Quaternius/men/Beach-transformed.glb`
 
@@ -17,20 +18,17 @@ export function Model(props) {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions } = useAnimations(animations, group)
+  const { camera } = useThree()
 
-  const { previewConfig } = props
-  
+  // Store last distance state to avoid unnecessary play/pause
+  const lastFarRef = React.useRef(false)
+
   useEffect(() => {
-
-    // Play the requested action (or Idle). If `startOffset` is provided it will set
-    // the action's time so multiple instances can be out-of-sync.
     if (!actions) return;
-
     const actionName = props.action || 'Idle'
     const act = actions[actionName]
     if (act) {
       if (typeof props.startOffset === 'number') {
-        // clamp to [0, duration) if duration available
         const duration = act.getClip ? (act.getClip().duration || 0) : (act._clip ? act._clip.duration : 0)
         if (duration > 0) {
           act.time = Math.max(0, Math.min(props.startOffset, duration - 0.0001))
@@ -40,8 +38,32 @@ export function Model(props) {
       }
       act.play()
     }
-
   }, [actions, props.action, props.startOffset])
+
+  // Pause/resume animation based on camera distance
+  useFrame(() => {
+    if (!actions || !group.current) return;
+    const actionName = props.action || 'Idle'
+    const act = actions[actionName]
+    if (!act) return;
+    // Get world position of the model
+    const pos = new Vector3()
+    group.current.getWorldPosition(pos)
+    const camPos = camera.position
+    const dist = pos.distanceTo(camPos)
+    const FAR_DIST = props.animationRenderDistance // adjust as needed
+    if (dist > FAR_DIST) {
+      if (!lastFarRef.current) {
+        act.paused = true
+        lastFarRef.current = true
+      }
+    } else {
+      if (lastFarRef.current) {
+        act.paused = false
+        lastFarRef.current = false
+      }
+    }
+  })
 
   return (
     <group ref={group} {...props} dispose={null}>

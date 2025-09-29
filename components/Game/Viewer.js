@@ -31,7 +31,7 @@ export default function Viewer({ scale, children }) {
                     {children}
                 </group>
 
-                <ContactShadows scale={20} blur={10} far={20} />
+                {/* <ContactShadows scale={20} blur={10} far={20} /> */}
 
             </group>
 

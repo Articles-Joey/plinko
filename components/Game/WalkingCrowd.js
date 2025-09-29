@@ -13,7 +13,7 @@ export default function WalkingCrowd() {
     // - crowdSpacing variable controls spacing between people inside a cluster
     // - each walker maintains cluster-relative offset so crowdSpacing stays meaningful when they loop
 
-    const CLUSTERS = 20; // number of cluster starting points along path
+    const CLUSTERS = 15; // number of cluster starting points along path
     const MIN_MOTION = -205; // motion axis minimum (z)
     const MAX_MOTION = 205;  // motion axis maximum (z)
     const BASE_Y = -88;
@@ -115,7 +115,7 @@ export default function WalkingCrowd() {
                             color={'white'}
                             // castShadow
                         /> */}
-                        <Comp action={"Walk"} scale={2.5} startOffset={w.startOffset} />
+                        <Comp action={"Walk"} animationRenderDistance={200} scale={2.5} startOffset={w.startOffset} />
                     </group>
                 );
             })}

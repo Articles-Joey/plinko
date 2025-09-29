@@ -25,6 +25,7 @@
     &.show-sidebar {
         .menu-card {
             @include media-breakpoint-up(lg) {
+                overflow: auto;
                 display: initial;
                 // position: fixed;
                 // bottom: 0;

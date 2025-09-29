@@ -137,6 +137,7 @@ function BeachSides() {
 
 function GameCanvas({ scale, children }) {
 
+    const hasHydrated = useStore(state => state._hasHydrated)
     const theme = useStore(state => state.theme)
     // setTheme = useStore(state => state.setTheme)
     const balls = useStore(state => state.balls)
@@ -288,18 +289,18 @@ function GameCanvas({ scale, children }) {
                                 {theme == "Dark" && <>
                                     <pointLight
                                         position={[0, 1, 0.5]}
-                                        intensity={100}
-                                        distance={100}
+                                        intensity={50}
+                                        distance={80}
                                         color={'yellow'}
-                                        castShadow
+                                        // castShadow
                                     />
 
                                     <pointLight
                                         position={[0, 1, 0]}
-                                        intensity={100}
-                                        distance={100}
+                                        intensity={50}
+                                        distance={80}
                                         color={'yellow'}
-                                        castShadow
+                                        // castShadow
                                     />
                                 </>}
 
@@ -320,18 +321,18 @@ function GameCanvas({ scale, children }) {
                                 {theme == "Dark" && <>
                                     <pointLight
                                         position={[0, 1, 0.5]}
-                                        intensity={100}
-                                        distance={100}
+                                        intensity={50}
+                                        distance={80}
                                         color={'yellow'}
-                                        castShadow
+                                        // castShadow
                                     />
 
                                     <pointLight
                                         position={[0, 1, 0]}
-                                        intensity={100}
-                                        distance={100}
+                                        intensity={50}
+                                        distance={80}
                                         color={'yellow'}
-                                        castShadow
+                                        // castShadow
                                     />
                                 </>}
 
@@ -369,9 +370,7 @@ function GameCanvas({ scale, children }) {
                     position={[-1, 0, 0]}
                     scale={2.5}
                 />
-            </group>
-
-            <WalkingCrowd />
+            </group>            
 
             {/* BoardwalkBuildings */}
             <group
@@ -406,18 +405,18 @@ function GameCanvas({ scale, children }) {
                         {theme == "Dark" && <>
                             <pointLight
                                 position={[0, 1, 0.5]}
-                                intensity={100}
-                                distance={100}
+                                intensity={50}
+                                distance={80}
                                 color={'yellow'}
-                                castShadow
+                                // castShadow
                             />
 
                             <pointLight
                                 position={[0, 1, 0]}
-                                intensity={100}
-                                distance={100}
+                                intensity={50}
+                                distance={80}
                                 color={'yellow'}
-                                castShadow
+                                // castShadow
                             />
                         </>}
 
@@ -569,15 +568,15 @@ function GameCanvas({ scale, children }) {
                     rotation={[Math.PI / 2, 0, 0]}
                     scale={5}
                 />
-                {theme == "Dark" &&
+                {/* {theme == "Dark" &&
                     <pointLight
                         position={[0, -9, 10]}
                         intensity={2000}
                         distance={20}
                         color="orange"
-                        castShadow
+                        // castShadow
                     />
-                }
+                } */}
             </group>
 
             <BeachSides />
@@ -596,6 +595,10 @@ function GameCanvas({ scale, children }) {
         physicsContent = (
             gameContent
         )
+    }
+
+    if (!hasHydrated) {
+        return <div>Loading...</div>
     }
 
     return (
@@ -624,6 +627,8 @@ function GameCanvas({ scale, children }) {
                     <SailingShip
 
                     />
+
+                    <WalkingCrowd />
 
                     <Physics gravity={[0, -30, 0]}>
 

@@ -6,6 +6,13 @@ export const useStore = create()(
     persist(
         (set, get) => ({
 
+            _hasHydrated: false,
+            setHasHydrated: (state) => {
+                set({
+                    _hasHydrated: state
+                });
+            },
+
             // Only available on larger screens
             showSidebar: true,
             setShowSidebar: (newValue) => {
@@ -61,7 +68,10 @@ export const useStore = create()(
         }),
         {
             name: 'plinko-storage-articles-media', // name of the item in the storage (must be unique)
-            storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+            onRehydrateStorage: (state) => {
+                return () => state.setHasHydrated(true)
+            }
+            // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
         },
     ),
 )
