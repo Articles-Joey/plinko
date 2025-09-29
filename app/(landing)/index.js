@@ -150,29 +150,6 @@ export default function PlinkoPage(props) {
 
     }
 
-    function claim() {
-
-        axios.post('/api/user/community/games/plinko/claim')
-            .then(response => {
-
-                console.log(response.data)
-                setWallet({
-                    ...wallet,
-                    total: response.data.total + 100
-                })
-
-                // const tempBoard = leaderboard.map(obj => obj.user_id == session.user._id ? { ...obj, total: wallet, last_play: new Date() } : obj)
-                // setLeaderboard(tempBoard)
-
-                // setLastClaim(new Date())
-                // setLeaderboard(response.data)
-            })
-            .catch(response => {
-                console.log(response.data)
-            })
-
-    }
-
     return (
         <div 
         className={

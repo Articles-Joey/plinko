@@ -58,6 +58,29 @@ export default function OnlineBalance({
 
     }, [userDetails?.user_id])
 
+    function claim() {
+
+        axios.post('/api/user/claim')
+            .then(response => {
+
+                console.log("Claim Response:", response.data)
+                setWallet({
+                    ...wallet,
+                    total: response.data.total + 100
+                })
+
+                // const tempBoard = leaderboard.map(obj => obj.user_id == session.user._id ? { ...obj, total: wallet, last_play: new Date() } : obj)
+                // setLeaderboard(tempBoard)
+
+                // setLastClaim(new Date())
+                // setLeaderboard(response.data)
+            })
+            .catch(response => {
+                console.log(response.data)
+            })
+
+    }
+
     return (
         <div className="card card-articles card-sm mb-2">
 
@@ -73,7 +96,7 @@ export default function OnlineBalance({
 
             {userDetails?.user_id && <>
                 <div className="card-body pb-0">
-    
+
                     {/* <div className='text-center mb-2'>
                                                 <ArticlesButton
                                                     small
@@ -82,7 +105,7 @@ export default function OnlineBalance({
                                                     Change Bet
                                                 </ArticlesButton>
                                             </div> */}
-    
+
                     <ArticlesButton
                         className="w-100"
                         onClick={() => {
@@ -94,30 +117,30 @@ export default function OnlineBalance({
                             -10 Points
                         </span>
                     </ArticlesButton>
-    
+
                     <div className="small text-center">
                         {`${balls.length || 0} Active Balls`}
                     </div>
-    
+
                 </div>
-    
+
                 <hr className="my-1" />
-    
+
                 <div className="card-body pt-1">
-    
+
                     <div className="small d-flex justify-content-between">
-    
+
                         <h6 className='mb-0'>Next Claim</h6>
-    
+
                         <div className="badge bg-dark shadow-articles">
                             {/* <div><small>{format(new Date(), 'MM/dd/yy hh:mmaa')}</small></div> */}
                             {wallet?.last_claim && <Countdown daysInHours={true} date={add(new Date(wallet.last_claim), { hours: 24 })} />}
                         </div>
-    
+
                     </div>
-    
+
                     <div><small>One claim per 24 hours</small></div>
-    
+
                     {/* <div>+100 points</div> */}
                     <ArticlesButton
                         disabled={
@@ -130,11 +153,11 @@ export default function OnlineBalance({
                     >
                         Claim 100 Points
                     </ArticlesButton>
-    
+
                     <div className='lh-sm'>
                         {wallet?.last_claim && <div className='l'><small>Next claim {format(add(new Date(wallet?.last_claim), { hours: 24 }), 'MM/dd/yy hh:mmaa')}</small></div>}
                     </div>
-    
+
                 </div>
             </>}
 
@@ -164,7 +187,7 @@ export default function OnlineBalance({
                     <ArticlesButton
                         className={""}
                         onClick={() => {
-                           getBalance()
+                            getBalance()
                         }}
                     >
                         <i className="fad fa-redo me-0"></i>
