@@ -11,10 +11,20 @@ export async function GET(req) {
     const userId = req.headers.get('x-user-id');
 
     const cookieStore = await cookies();
-
     const session_token = cookieStore.get('sess')?.value
 
-    const endpoint = `http://localhost:3012/api/auth/session?token=${encodeURIComponent(session_token)}`;
+    console.log("userId", userId)
+    console.log("session_token", session_token)
+
+    const endpoint =
+        (process.env.NODE_ENV == "development" ?
+            'http://localhost:3012'
+            :
+            'https://accounts.articles.media'
+        )
+        +
+        `/api/auth/session?token=${encodeURIComponent(session_token)}`;
+
     const response = await fetch(endpoint);
     const data = await response.json();
 
