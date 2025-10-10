@@ -37,6 +37,7 @@ import classNames from 'classnames';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
+    loading: () => <p>Loading...</p>,
 });
 
 function RedeemBallButton({
@@ -353,13 +354,20 @@ export default function PlinkoPage(props) {
 
                         <ArticlesButton
                             small
+                            id="toggle-sidebar-button"
                             className="w-50"
                             onClick={() => {
                                 setShowSidebar(!showSidebar)
                             }}
                         >
+
                             <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i>
                             <span>Sidebar: {showSidebar ? 'On' : 'Off'}</span>
+
+                            <div id='size-warning' className="ms-2 badge bg-danger shadow-articles">
+                                Screen too small!
+                            </div>
+
                         </ArticlesButton>
 
                     </div>
@@ -400,7 +408,6 @@ export default function PlinkoPage(props) {
                     </Link>
 
                 </div>
-
 
             </div>
 
@@ -446,7 +453,7 @@ export default function PlinkoPage(props) {
             <div className='game-content'>
 
                 <div className='canvas-three-wrap'>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense>
                         <GameCanvas
                             key={sceneKey}
                             setWallet={setWallet}

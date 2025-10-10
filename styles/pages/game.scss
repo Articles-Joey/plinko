@@ -61,6 +61,22 @@
         // filter: blur(10px);
     }
 
+    #toggle-sidebar-button {
+        position: relative;
+
+        #size-warning {
+            position: absolute;
+            top: initial;
+            bottom: -10px;
+            right: -10px;
+            font-size: 0.6rem;
+
+            @include media-breakpoint-up(lg) {
+                display: none;
+            }
+        }
+    }
+
     .canvas-three-wrap {
         border: 1px solid #000;
         background-color: white;
@@ -103,8 +119,28 @@
     }
 
     .menu-card {
-        background-color: var(--card-background);
+        background-color: var(--card-background-75);
         border-bottom: 1px solid black;
+
+        @include media-breakpoint-down(lg) {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: fixed;
+            // width: 100%;
+            height: calc(100vh - 50px);
+            // height: calc(100vh - 30%);
+            overflow-y: auto;
+            // top: var(--top-position);
+            bottom: 50px;
+            // left: 50px;
+            // right: 50px;
+            left: 0;
+            right: 0;
+            transform: translateY(110%);
+            transition-duration: 200ms;
+            z-index: 10;
+        }
 
         &.no-sidebar {
             display: flex;
@@ -112,13 +148,15 @@
             justify-content: flex-end;
             position: fixed;
             // width: 100%;
-            height: calc(100vh - 100px);
-            height: calc(100vh - 30%);
+            height: calc(100vh - 50px);
+            // height: calc(100vh - 30%);
             overflow-y: auto;
             // top: var(--top-position);
             bottom: 50px;
-            left: 50px;
-            right: 50px;
+            // left: 50px;
+            // right: 50px;
+            left: 0;
+            right: 0;
             transform: translateY(110%);
             transition-duration: 200ms;
             z-index: 10;
@@ -153,9 +191,12 @@
         .wrap {
             padding: 1rem;
             overflow-y: auto;
+            max-width: 400px;
+            margin: 0 auto;
 
             @include media-breakpoint-up(lg) {
                 padding: 0.5rem;
+                padding-bottom: 50px;
             }
 
             &::-webkit-scrollbar {

@@ -403,21 +403,24 @@ function GameCanvas({ scale, children }) {
                         <LightpostSingle />
 
                         {theme == "Dark" && <>
+
                             <pointLight
                                 position={[0, 1, 0.5]}
                                 intensity={50}
                                 distance={80}
                                 color={'yellow'}
+                                scale={1}
                                 // castShadow
                             />
 
-                            <pointLight
+                            {/* <pointLight
                                 position={[0, 1, 0]}
                                 intensity={50}
                                 distance={80}
                                 color={'yellow'}
                                 // castShadow
-                            />
+                            /> */}
+
                         </>}
 
                     </group>

@@ -20,7 +20,8 @@ export default function ArticlesButton(props) {
         onMouseUp,
         onMouseLeave,
         onTouchStart,
-        onTouchEnd
+        onTouchEnd,
+        id
     } = props;
 
     return (
@@ -30,6 +31,7 @@ export default function ArticlesButton(props) {
             }
             disabled={disabled}
             style={style}
+            id={id}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
             onMouseLeave={onMouseLeave}
