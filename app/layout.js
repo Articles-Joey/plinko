@@ -23,8 +23,8 @@ import LayoutClient from './layout-client';
 // });
 
 export const metadata = {
-  title: "Race Game",
-  description: "Race to the finish line by strategically picking your moves and outsmarting your opponents.",
+  title: "Plinko - Articles Media",
+  description: "",
 };
 
 export default function RootLayout({ children }) {
