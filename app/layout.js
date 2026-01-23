@@ -11,6 +11,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@/styles/index.scss";
 import SocketLogicHandler from "@/components/SocketLogicHandler";
 import LayoutClient from './layout-client';
+import DarkModeHandler from '@/components/UI/DarkModeHandler';
+import GlobalClientModals from '@/components/UI/GlobalClientModals';
+import { Suspense } from 'react';
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -33,10 +36,10 @@ export default function RootLayout({ children }) {
 
       <head>
         
-        <link
+        {/* <link
           rel="stylesheet"
           href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
-        />
+        /> */}
 
       </head>
 
@@ -44,9 +47,12 @@ export default function RootLayout({ children }) {
       // className={`${geistSans.variable} ${geistMono.variable}`}
       >
 
-        <LayoutClient />
-
-        <SocketLogicHandler />
+        <Suspense>
+          <LayoutClient />
+          <SocketLogicHandler />
+          <DarkModeHandler />
+          <GlobalClientModals />
+        </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>

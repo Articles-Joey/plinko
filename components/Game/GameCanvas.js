@@ -138,8 +138,12 @@ function BeachSides() {
 function GameCanvas({ scale, children }) {
 
     const hasHydrated = useStore(state => state._hasHydrated)
-    const theme = useStore(state => state.theme)
-    // setTheme = useStore(state => state.setTheme)
+
+    // const theme = useStore(state => state.theme);
+    // const setTheme = useStore(state => state.setTheme);
+    const darkMode = useStore(state => state.darkMode)
+    const toggleDarkMode = useStore(state => state.toggleDarkMode)
+
     const balls = useStore(state => state.balls)
     const addBall = useStore(state => state.addBall)
     const debug = useStore(state => state.debug)
@@ -286,7 +290,7 @@ function GameCanvas({ scale, children }) {
 
                                 <LightpostSingle />
 
-                                {theme == "Dark" && <>
+                                {darkMode && <>
                                     <pointLight
                                         position={[0, 1, 0.5]}
                                         intensity={50}
@@ -318,7 +322,7 @@ function GameCanvas({ scale, children }) {
 
                                 <LightpostSingle />
 
-                                {theme == "Dark" && <>
+                                {darkMode && <>
                                     <pointLight
                                         position={[0, 1, 0.5]}
                                         intensity={50}
@@ -402,7 +406,7 @@ function GameCanvas({ scale, children }) {
 
                         <LightpostSingle />
 
-                        {theme == "Dark" && <>
+                        {darkMode && <>
 
                             <pointLight
                                 position={[0, 1, 0.5]}
@@ -609,12 +613,12 @@ function GameCanvas({ scale, children }) {
             {!reload &&
                 <Canvas camera={{ position: [0, 20, 180], fov: 50 }}>
 
-                    <hemisphereLight color="gray" groundColor="black" intensity={theme === "Dark" ? 0.5 : 1} />
+                    <hemisphereLight color="gray" groundColor="black" intensity={darkMode ? 0.5 : 1} />
 
-                    <ambientLight intensity={theme === "Dark" ? 0 : 2} />
+                    <ambientLight intensity={darkMode ? 0 : 2} />
 
                     <SpotLight
-                        position={theme === "Dark" ? [0, -100, 600] : [0, 50, 300]}
+                        position={darkMode ? [0, -100, 600] : [0, 50, 300]}
                     // angle={1} 
                     // penumbra={1}
                     />

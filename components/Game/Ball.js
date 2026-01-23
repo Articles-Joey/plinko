@@ -56,7 +56,7 @@ const Ball = (props) => {
 
             if (e?.body?.userData?.score || e?.body?.userData?.score === 0) {
 
-                console.log("score", e?.body?.userData?.score)
+                // console.log("score", e?.body?.userData?.score, item.type, ball_key)
 
                 if (item.type === "Online") {
 

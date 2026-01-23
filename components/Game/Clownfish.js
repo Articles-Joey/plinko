@@ -14,7 +14,7 @@ const link = `models/Clownfish.glb`
 
 export function ModelQuaterniusFishingClownfish(props) {
 
-  const theme = useStore(state => state.theme);
+  // const theme = useStore(state => state.theme);
 
   const group = React.useRef()
   const { scene, animations } = useGLTF(link)

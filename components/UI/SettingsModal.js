@@ -13,7 +13,7 @@ export default function FourFrogsSettingsModal({
 
     const [lightboxData, setLightboxData] = useState(null)
 
-    const [tab, setTab] = useState('Controls')
+    const [tab, setTab] = useState('Graphics')
 
     return (
         <>
@@ -52,6 +52,7 @@ export default function FourFrogsSettingsModal({
 
                     <div className='p-2'>
                         {[
+                            'Graphics',
                             'Controls',
                             'Audio',
                             'Chat'
@@ -69,6 +70,11 @@ export default function FourFrogsSettingsModal({
                     <hr className="my-0" />
 
                     <div className="p-2">
+                        {tab == 'Graphics' &&
+                            <>
+                                TODO
+                            </>
+                        }
                         {tab == 'Controls' &&
                             <div>
                                 {[
@@ -124,7 +130,7 @@ export default function FourFrogsSettingsModal({
 
                                                 <div className="badge badge-hover bg-articles me-1">{obj.defaultKeyboardKey}</div>
 
-                                                <ArticlesButton 
+                                                <ArticlesButton
                                                     className=""
                                                     small
                                                 >

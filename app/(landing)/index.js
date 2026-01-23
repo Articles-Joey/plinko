@@ -40,6 +40,20 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     loading: () => <p>Loading...</p>,
 });
 
+import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
+import Ad from '@articles-media/articles-dev-box/Ad';
+
+import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
+import useUserToken from '@articles-media/articles-dev-box/useUserToken';
+
+import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
+import { useOfflineWallet } from '@/hooks/useOfflineWallet';
+
+const ReturnToLauncherButton = dynamic(() =>
+    import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
+    { ssr: false }
+);
+
 function RedeemBallButton({
     className,
     redeemBall
@@ -61,11 +75,32 @@ function RedeemBallButton({
 
 export default function PlinkoPage(props) {
 
+    const {
+        data: userToken,
+        error: userTokenError,
+        isLoading: userTokenLoading,
+        mutate: userTokenMutate
+    } = useUserToken(
+        "3017"
+    );
+
+    const {
+        data: userDetails,
+        error: userDetailsError,
+        isLoading: userDetailsLoading,
+        mutate: userDetailsMutate
+    } = useUserDetails({
+        token: userToken
+    });
+
     // const [wallet, setWallet] = useState({
     //     total: 0
     // })
 
     const { wallet, setWallet } = useWallet()
+
+    const offlineWallet = useOfflineWallet(state => state.wallet);
+    const setOfflineWallet = useOfflineWallet(state => state.setWallet);
 
     // const teleportLocation = useStore(state => state.teleportLocation)
     const setTeleportLocation = useStore(state => state.setTeleportLocation)
@@ -73,8 +108,10 @@ export default function PlinkoPage(props) {
     // const darkMode = useStore(state => state.darkMode)
     // const setDarkMode = useStore(state => state.setDarkMode)
 
-    const theme = useStore(state => state.theme);
-    const setTheme = useStore(state => state.setTheme);
+    // const theme = useStore(state => state.theme);
+    // const setTheme = useStore(state => state.setTheme);
+    const darkMode = useStore(state => state.darkMode)
+    const toggleDarkMode = useStore(state => state.toggleDarkMode)
 
     const menuOpen = useStore(state => state.menuOpen)
     const setMenuOpen = useStore(state => state.setMenuOpen)
@@ -125,14 +162,28 @@ export default function PlinkoPage(props) {
         if (offline) {
 
             addBall()
-            setWallet({
+            setOfflineWallet({
                 ...wallet,
                 total: (wallet?.total || 0) - 10
             })
 
         } else {
 
-            axios.post('/api/user/community/games/plinko/ball/redeem')
+            axios.post(
+                process.env.NODE_ENV === 'production' ?
+                    'https://articles.media/api/user/community/games/plinko/ball/redeem'
+                    :
+                    'http://localhost:3001/api/user/community/games/plinko/ball/redeem'
+                ,
+                {
+
+                },
+                {
+                    headers: {
+                        "x-articles-api-key": userToken
+                    }
+                }
+            )
                 .then(response => {
 
                     console.log(response.data)
@@ -152,15 +203,96 @@ export default function PlinkoPage(props) {
     }
 
     return (
-        <div 
-        className={
-            classNames(
-                'plinko-game-page',
-                { 'show-sidebar': showSidebar }
-            )
-        } 
-        id={'plinko-game'}
+        <div
+            className={
+                classNames(
+                    'plinko-game-page',
+                    { 'show-sidebar': showSidebar }
+                )
+            }
+            id={'plinko-game'}
         >
+
+            <Suspense>
+                {/* <GamepadKeyboard
+                    disableToggle={true}
+                    active={nicknameKeyboard}
+                    onFinish={(text) => {
+                        console.log("FINISH KEYBOARD", text)
+                        useStore.getState().setNickname(text);
+                        useStore.getState().setNicknameKeyboard(false);
+                    }}
+                    onCancel={(text) => {
+                        console.log("CANCEL KEYBOARD", text)
+                        // useStore.getState().setNickname(text);
+                        useStore.getState().setNicknameKeyboard(false);
+                    }}
+                /> */}
+                <PieMenu
+                    options={[
+                        {
+                            label: 'Settings',
+                            icon: 'fad fa-cog',
+                            callback: () => {
+                                setShowSettingsModal(prev => !prev)
+                            }
+                        },
+                        {
+                            label: 'Go Back',
+                            icon: 'fad fa-arrow-left',
+                            callback: () => {
+                                window.history.back()
+                            }
+                        },
+                        {
+                            label: 'Credits',
+                            icon: 'fad fa-info-circle',
+                            callback: () => {
+                                setShowCreditsModal(true)
+                            }
+                        },
+                        {
+                            label: 'Game Launcher',
+                            icon: 'fad fa-gamepad',
+                            callback: () => {
+                                window.location.href = 'https://games.articles.media';
+                            }
+                        },
+                        {
+                            label: `${darkMode ? "Light" : "Dark"} Mode`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                toggleDarkMode()
+                            }
+                        },
+                        {
+                            label: `Redeem Online Ball`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                redeemBall()
+                            }
+                        },
+                        {
+                            label: `Redeem Offline Ball`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                addBall('Offline')
+                                setOfflineWallet({
+                                    ...offlineWallet,
+                                    total: (offlineWallet?.total || 0) - 10
+                                })
+                                // redeemBall(true)
+                            }
+                        }
+                    ]}
+                    onFinish={(event) => {
+                        console.log("Event", event)
+                        if (event.callback) {
+                            event.callback()
+                        }
+                    }}
+                />
+            </Suspense>
 
             <div className={`menu-floating-button`}>
 
@@ -315,7 +447,20 @@ export default function PlinkoPage(props) {
                         </div>
 
                         <div className='w-50'>
-                            <DropdownButton
+                            <ArticlesButton
+                                small
+                                // id="toggle-sidebar-button"
+                                className="w-100"
+                                onClick={() => {
+                                    toggleDarkMode()
+                                }}
+                            >
+
+                                <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i>
+                                <span>Sidebar: {showSidebar ? 'On' : 'Off'}</span>
+
+                            </ArticlesButton>
+                            {/* <DropdownButton
                                 variant="articles w-100"
                                 size='sm'
                                 id="dropdown-basic-button"
@@ -323,8 +468,7 @@ export default function PlinkoPage(props) {
                                 title={
                                     <span>
                                         <i className="fad fa-eyedropper"></i>
-                                        <span>Theme: {theme == "Dark" ? 'Dark' : 'Light'}</span>
-                                        {/* <span>{darkMode ? 'On' : 'Off'}</span> */}
+                                        <span>Dark Mode: {darkMode ? 'Dark' : 'Light'}</span>
                                     </span>
                                 }
                             >
@@ -338,8 +482,7 @@ export default function PlinkoPage(props) {
                                             <Dropdown.Item
                                                 key={location}
                                                 onClick={() => {
-                                                    // setDarkMode(location)
-                                                    setTheme(theme == "Dark" ? "Light" : "Dark")
+                                                    toggleDarkMode()
                                                 }}
                                                 className="d-flex justify-content-between"
                                             >
@@ -349,7 +492,7 @@ export default function PlinkoPage(props) {
 
                                 </div>
 
-                            </DropdownButton>
+                            </DropdownButton> */}
                         </div>
 
                         <ArticlesButton
@@ -397,7 +540,7 @@ export default function PlinkoPage(props) {
                     >
                         <ArticlesButton
                             small
-                            className="w-100"
+                            className="w-100 mb-2"
                             onClick={() => {
                                 reloadScene()
                             }}
@@ -406,6 +549,8 @@ export default function PlinkoPage(props) {
                             <span>GitHub</span>
                         </ArticlesButton>
                     </Link>
+
+                    <ReturnToLauncherButton />
 
                 </div>
 
