@@ -119,6 +119,9 @@ export default function PlinkoPage(props) {
     const showSidebar = useStore(state => state.showSidebar);
     const setShowSidebar = useStore(state => state.setShowSidebar);
 
+    const sceneOrientation = useStore(state => state.sceneOrientation);
+    const toggleSceneOrientation = useStore(state => state.toggleSceneOrientation);
+
     // const { 
     //     balls, 
     //     removeBall, 
@@ -456,8 +459,13 @@ export default function PlinkoPage(props) {
                                 }}
                             >
 
-                                <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i>
-                                <span>Sidebar: {showSidebar ? 'On' : 'Off'}</span>
+                                {/* <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i> */}
+                                {darkMode ?
+                                    <i className="fad fa-sun"></i>
+                                    :
+                                    <i className="fad fa-moon"></i>
+                                }
+                                <span className='ms-2'>{darkMode ? 'Light' : 'Dark'} Mode</span>
 
                             </ArticlesButton>
                             {/* <DropdownButton
@@ -510,6 +518,53 @@ export default function PlinkoPage(props) {
                             <div id='size-warning' className="ms-2 badge bg-danger shadow-articles">
                                 Screen too small!
                             </div>
+
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            small
+                            // id="toggle-sidebar-button"
+                            className="w-50"
+                            onClick={() => {
+                                // toggleDarkMode()
+                                toggleSceneOrientation()
+                            }}
+                        >
+                            <i className='fad fa-sync-alt'></i>
+                            <span
+                                style={{
+                                    fontSize: '0.7rem'
+                                }}
+                            >
+                                {/* Orientation:  */}
+                                Scene: {sceneOrientation}
+                            </span>
+                            {/* <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i> */}
+                            {/* {darkMode ?
+                                <i className="fad fa-sun"></i>
+                                :
+                                <i className="fad fa-moon"></i>
+                            }
+                            <span className='ms-2'>{darkMode ? 'Light' : 'Dark'} Mode</span> */}
+
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            small
+                            // id="toggle-sidebar-button"
+                            className="w-50"
+                            onClick={() => {
+                                toggleDarkMode()
+                            }}
+                        >
+
+                            {/* <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i> */}
+                            {darkMode ?
+                                <i className="fad fa-sun"></i>
+                                :
+                                <i className="fad fa-moon"></i>
+                            }
+                            <span className='ms-2'>{darkMode ? 'Light' : 'Dark'} Mode</span>
 
                         </ArticlesButton>
 

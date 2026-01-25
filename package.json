@@ -17,8 +17,8 @@
     "@mui/material": "^7.3.7",
     "@mui/material-nextjs": "^7.3.7",
     "@react-three/cannon": "^6.6.0",
-    "@react-three/drei": "^10.5.0",
-    "@react-three/fiber": "^9.2.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "axios": "^1.13.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "bootstrap": "^5.3.8",
@@ -35,8 +35,8 @@
     "react-hotkeys-hook": "^5.1.0",
     "sass": "^1.94.2",
     "socket.io-client": "^4.8.1",
-    "swr": "^2.3.7",
-    "three": "^0.178.0"
+    "swr": "^2.3.8",
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

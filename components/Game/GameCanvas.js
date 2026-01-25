@@ -139,6 +139,8 @@ function GameCanvas({ scale, children }) {
 
     const hasHydrated = useStore(state => state._hasHydrated)
 
+    const sceneOrientation = useStore(state => state.sceneOrientation);
+
     // const theme = useStore(state => state.theme);
     // const setTheme = useStore(state => state.setTheme);
     const darkMode = useStore(state => state.darkMode)
@@ -631,21 +633,29 @@ function GameCanvas({ scale, children }) {
                         sunPosition={[0, 10, -200]}
                     />
 
-                    <SailingShip
-
-                    />
-
-                    <WalkingCrowd />
-
-                    <Physics gravity={[0, -30, 0]}>
-
-                        {physicsContent}
-
-                    </Physics>
-
-                    {/* <OrbitControls /> */}
-
-                    <CameraLogger />
+                    <group
+                        rotation={[
+                            sceneOrientation == "Flat" ? degToRad(-90) : 0,
+                            0,
+                            0
+                        ]}
+                    >
+                        <SailingShip
+    
+                        />
+    
+                        <WalkingCrowd />
+    
+                        <Physics gravity={[0, -30, 0]}>
+    
+                            {physicsContent}
+    
+                        </Physics>
+    
+                        {/* <OrbitControls /> */}
+    
+                        <CameraLogger />
+                    </group>
 
                 </Canvas>
             }

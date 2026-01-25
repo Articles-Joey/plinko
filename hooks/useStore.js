@@ -63,11 +63,23 @@ export const useStore = create()(
             menuOpen: false,
             setMenuOpen: (open) => {
                 set({ menuOpen: open })
+            },
+
+            // Flat or Upright
+            sceneOrientation: "Flat",
+            setSceneOrientation: (orientation) => {
+                set({ sceneOrientation: orientation })
+            },
+            toggleSceneOrientation: () => {
+                set((prev) => ({
+                    sceneOrientation: prev.sceneOrientation === "Flat" ? "Upright" : "Flat"
+                }))
             }
 
         }),
         {
             name: 'plinko-storage-articles-media', // name of the item in the storage (must be unique)
+            version: 1,
             onRehydrateStorage: (state) => {
                 return () => state.setHasHydrated(true)
             }

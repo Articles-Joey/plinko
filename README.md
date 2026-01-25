@@ -16,18 +16,22 @@ npm run dev
 
 Handled by a MongoDB database, schema available inside db-schema.js
 
-## Inspiration
+## Attributions
 
-[Ship Model](https://github.com/Articles-Joey/plinko)
+[Ship Model (Kenney)](https://kenney.nl/assets/pirate-kit)
 
-[Food Models](https://github.com/Articles-Joey/plinko)
+[Food Models (Quaternius)](https://quaternius.com/packs/junkfood.html)
 
-[People Models](https://github.com/Articles-Joey/plinko)
+[People Models (Quaternius)](https://quaternius.com/packs/ultimatemodularcharacters.html)
 
-[Building Models](https://github.com/Articles-Joey/plinko)
+[Building Models (JToastie)](https://poly.pizza/u/J-Toastie)
 
 [Beach Ball Texture](https://github.com/Articles-Joey/plinko)
 
+[Wood Texture](https://github.com/Articles-Joey/plinko)
+
 [Beach Ball Icon](https://www.flaticon.com/free-icon/beach-ball_10725946)
 
-[Wood Texture](https://github.com/Articles-Joey/plinko)
+## Inspiration
+
+...
