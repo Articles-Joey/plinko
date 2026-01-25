@@ -18,6 +18,8 @@ const Ball = (props) => {
 
     const { wallet, setWallet, addTotal } = useWallet()
 
+    const betAmount = useStore(state => state.betAmount);
+
     const offlineWallet = useOfflineWallet(state => state.wallet);
     const setOfflineWallet = useOfflineWallet(state => state.setWallet);
 
@@ -96,7 +98,7 @@ const Ball = (props) => {
 
                     setOfflineWallet({
                         ...offlineWallet,
-                        total: offlineWallet?.total + (10 * e?.body?.userData?.score)
+                        total: offlineWallet?.total + ((betAmount * e?.body?.userData?.score))
                     })
 
                     removeBall(ball_key)

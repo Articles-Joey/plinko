@@ -10,6 +10,9 @@ export async function POST(req) {
     const db = (await clientPromise).db();
     const userId = req.headers.get('x-user-id');
 
+    const body = await req.json();
+    const { betAmount } = body;
+
     // Check wallet
     var result = await db
         .collection("game-plinko-scores")
@@ -40,13 +43,13 @@ export async function POST(req) {
                 { user_id: new ObjectId(userId) },
                 {
                     $set: { last_play: new Date() },
-                    $inc: { total: -10 }
+                    $inc: { total: -betAmount }
                 }
             )
 
         return NextResponse.json({
             ...result,
-            total: (result.total - 10)
+            total: (result.total - betAmount)
         })
 
     } else {

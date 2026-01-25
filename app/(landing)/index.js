@@ -37,7 +37,10 @@ import classNames from 'classnames';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
-    loading: () => <p>Loading...</p>,
+    loading: () => <div className='w-100 h-100 d-flex justify-content-center align-items-center bg-black text-white'>
+        <i className="fas fa-spinner fa-spin"></i>
+        <span>Loading...</span>
+    </div>,
 });
 
 import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
@@ -48,30 +51,14 @@ import useUserToken from '@articles-media/articles-dev-box/useUserToken';
 
 import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
 import { useOfflineWallet } from '@/hooks/useOfflineWallet';
+import RedeemBallButton from '@/components/UI/RedeemBallButton';
+import { set } from 'date-fns';
+import BetAmountButton from '@/components/UI/BetAmountButton';
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
     { ssr: false }
 );
-
-function RedeemBallButton({
-    className,
-    redeemBall
-}) {
-    return (
-        <ArticlesButton
-            className={className}
-            onClick={() => {
-                redeemBall(true)
-            }}
-        >
-            <span>Redeem Ball</span>
-            <span className="ms-2 badge bg-dark shadow-articles">
-                -10 Points
-            </span>
-        </ArticlesButton>
-    )
-}
 
 export default function PlinkoPage(props) {
 
@@ -105,6 +92,9 @@ export default function PlinkoPage(props) {
     // const teleportLocation = useStore(state => state.teleportLocation)
     const setTeleportLocation = useStore(state => state.setTeleportLocation)
 
+    const setShowSettingsModal = useStore(state => state.setShowSettingsModal)
+    const setShowCreditsModal = useStore(state => state.setShowCreditsModal)
+
     // const darkMode = useStore(state => state.darkMode)
     // const setDarkMode = useStore(state => state.setDarkMode)
 
@@ -133,6 +123,8 @@ export default function PlinkoPage(props) {
     const addBall = useStore(state => state.addBall);
     const debug = useStore(state => state.debug);
     const setDebug = useStore(state => state.setDebug);
+    const betAmount = useStore(state => state.betAmount);
+    const setBetAmount = useStore(state => state.setBetAmount);
 
     // const [lastClaim, setLastClaim] = useState(null)
 
@@ -148,26 +140,29 @@ export default function PlinkoPage(props) {
         setSceneKey((prevKey) => prevKey + 1);
     };
 
-    useHotkeys('Space', (event) => {
+    // TODO - Setup hotkey in settings for redeeming ball
+    // useHotkeys('Space', (event) => {
 
-        if (userReduxState._id) {
-            redeemBall()
-            console.log("Online redeem")
-        } else {
-            redeemBall(true)
-            console.log("Offline redeem")
-        }
+    //     if (userReduxState._id) {
+    //         redeemBall()
+    //         console.log("Online redeem")
+    //     } else {
+    //         redeemBall(true)
+    //         console.log("Offline redeem")
+    //     }
 
-    }, [userReduxState]);
+    // }, [userReduxState]);
 
     function redeemBall(offline) {
 
         if (offline) {
 
-            addBall()
+            addBall({
+                type: 'Offline'
+            })
             setOfflineWallet({
-                ...wallet,
-                total: (wallet?.total || 0) - 10
+                ...offlineWallet,
+                total: (offlineWallet?.total || 0) - betAmount
             })
 
         } else {
@@ -194,7 +189,9 @@ export default function PlinkoPage(props) {
                         ...wallet,
                         total: response.data.total
                     })
-                    addBall()
+                    addBall({
+                        type: "Online"
+                    })
 
                 })
                 .catch(response => {
@@ -232,6 +229,7 @@ export default function PlinkoPage(props) {
                     }}
                 /> */}
                 <PieMenu
+                    menuItemRadius={160}
                     options={[
                         {
                             label: 'Settings',
@@ -279,12 +277,30 @@ export default function PlinkoPage(props) {
                             label: `Redeem Offline Ball`,
                             icon: 'fad fa-palette',
                             callback: () => {
-                                addBall('Offline')
-                                setOfflineWallet({
-                                    ...offlineWallet,
-                                    total: (offlineWallet?.total || 0) - 10
-                                })
-                                // redeemBall(true)
+                                // addBall({
+                                //     type: "Offline"
+                                // })
+                                // setOfflineWallet({
+                                //     ...offlineWallet,
+                                //     total: (offlineWallet?.total || 0) - 10
+                                // })
+                                redeemBall(true)
+                            }
+                        },
+                        {
+                            label: `Decrease Bet Amount`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                if (betAmount - 10 >= 1) {
+                                    setBetAmount(betAmount - 10)
+                                }
+                            }
+                        },
+                        {
+                            label: `Increase Bet Amount`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                setBetAmount(betAmount + 10)
                             }
                         }
                     ]}
@@ -306,11 +322,11 @@ export default function PlinkoPage(props) {
                 <div className='wrap'>
 
                     <div className='w-100 mb-0'>
-                        <div style={{ display: 'flex', alignItems: 'end' }} className='mb-1'>
+                        <div style={{ display: 'flex', alignItems: 'end' }} className='mb-2'>
                             <Image src={Logo.src} alt="Plinko Logo" width={50} height={50} />
                             <h1 style={{ marginBottom: 0, marginLeft: '8px' }}>Plinko</h1>
                         </div>
-                        <p>Welcome to the Plinko game! Drop your chips and see where they land.</p>
+                        {/* <p>Welcome to the Plinko game! Drop your chips and see where they land.</p> */}
                     </div>
 
                     <div className='mb-3 d-flex flex-wrap'>
@@ -465,7 +481,7 @@ export default function PlinkoPage(props) {
                                     :
                                     <i className="fad fa-moon"></i>
                                 }
-                                <span className='ms-2'>{darkMode ? 'Light' : 'Dark'} Mode</span>
+                                <span className='ms-1'>{darkMode ? 'Light' : 'Dark'} Mode</span>
 
                             </ArticlesButton>
                             {/* <DropdownButton
@@ -554,17 +570,12 @@ export default function PlinkoPage(props) {
                             // id="toggle-sidebar-button"
                             className="w-50"
                             onClick={() => {
-                                toggleDarkMode()
+                                setShowSettingsModal(true)
                             }}
                         >
 
-                            {/* <i className="fas fa-bars" style={{ transform: 'rotate(90deg)' }}></i> */}
-                            {darkMode ?
-                                <i className="fad fa-sun"></i>
-                                :
-                                <i className="fad fa-moon"></i>
-                            }
-                            <span className='ms-2'>{darkMode ? 'Light' : 'Dark'} Mode</span>
+                            <i className="fad fa-cog"></i>
+                            Settings
 
                         </ArticlesButton>
 
@@ -575,6 +586,8 @@ export default function PlinkoPage(props) {
                         className="mb-2"
                         autoShow
                     /> */}
+
+                    <div className='mb-2'><BetAmountButton /></div>
 
                     <OnlineBalance
                         redeemBall={redeemBall}
@@ -631,9 +644,9 @@ export default function PlinkoPage(props) {
                     Menu
                 </ArticlesButton>
 
-                <div className="badge bg-black">
+                {/* <div className="badge bg-black">
                     {wallet?.total} Points
-                </div>
+                </div> */}
 
                 {/* <ArticlesButton
                     onClick={() => {
@@ -643,10 +656,31 @@ export default function PlinkoPage(props) {
                     Claim Points
                 </ArticlesButton> */}
 
-                <RedeemBallButton
-                    className={""}
-                    redeemBall={redeemBall}
-                />
+                {!menuOpen && <div className='redeem-buttons'>
+                    <RedeemBallButton
+                        className={""}
+                        redeemBall={redeemBall}
+                    />
+                    <div className="badge bg-black me-4 ms-1">
+                        {wallet?.total} Points
+                    </div>
+
+                    <RedeemBallButton
+                        className={""}
+                        redeemBall={redeemBall}
+                        offline={true}
+                    />
+                    <div className="badge bg-black ms-1">
+                        {offlineWallet?.total} Points
+                    </div>
+                </div>}
+
+                <div>
+                    {/* <div className="badge bg-black">
+                        Bet Amount: 10 Points
+                    </div> */}
+                    <BetAmountButton />
+                </div>
 
             </div>
 

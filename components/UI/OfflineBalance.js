@@ -4,25 +4,31 @@ import { useStore } from "@/hooks/useStore"
 import { useOfflineWallet } from "@/hooks/useOfflineWallet"
 import { add, differenceInHours, format } from "date-fns"
 import Countdown from "react-countdown"
+import RedeemBallButton from "./RedeemBallButton"
 
-function RedeemBallButton({
-    className,
-    redeemBall
-}) {
-    return (
-        <ArticlesButton
-            className={className}
-            onClick={() => {
-                redeemBall(true)
-            }}
-        >
-            <span>Redeem Ball</span>
-            <span className="ms-2 badge bg-dark shadow-articles">
-                -10 Points
-            </span>
-        </ArticlesButton>
-    )
-}
+// function RedeemBallButton({
+//     className,
+//     redeemBall,
+//     disabled
+// }) {
+
+//     const betAmount = useStore(state => state.betAmount);
+
+//     return (
+//         <ArticlesButton
+//             className={className}
+//             disabled={disabled}
+//             onClick={() => {
+//                 redeemBall(true)
+//             }}
+//         >
+//             <span>Redeem Ball</span>
+//             <span className="ms-2 badge bg-dark shadow-articles">
+//                 -{betAmount} Points
+//             </span>
+//         </ArticlesButton>
+//     )
+// }
 
 export default function OfflineBalance({
 
@@ -36,19 +42,25 @@ export default function OfflineBalance({
     // } = useOfflineWallet()
 
     const balls = useStore(state => state.balls);
+    const resetBalls = useStore(state => state.resetBalls);
     const addBall = useStore(state => state.addBall);
+    const setBetAmount = useStore(state => state.setBetAmount);
 
     const wallet = useOfflineWallet(state => state.wallet);
     const setWallet = useOfflineWallet(state => state.setWallet);
     const lastClaim = useOfflineWallet(state => state.lastClaim);
     const setLastClaim = useOfflineWallet(state => state.setLastClaim);
 
+    const betAmount = useStore(state => state.betAmount);
+
     function redeemBall(offline) {
 
-        addBall('Offline')
+        addBall({
+            type: "Offline"
+        })
         setWallet({
             ...wallet,
-            total: (wallet?.total || 0) - 10
+            total: (wallet?.total || 0) - betAmount
         })
 
     }
@@ -86,6 +98,8 @@ export default function OfflineBalance({
                 <RedeemBallButton
                     className={"w-100"}
                     redeemBall={redeemBall}
+                    offline={true}
+                    sidebar={true}
                 />
 
                 <div className="small text-center">
@@ -147,6 +161,8 @@ export default function OfflineBalance({
                             ...wallet,
                             total: 100
                         })
+                        resetBalls()
+                        setBetAmount(10)
                     }}
                 >
                     Reset

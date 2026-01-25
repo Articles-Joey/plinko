@@ -21,6 +21,11 @@ export const useStore = create()(
                 }))
             },
 
+            betAmount: 10,
+            setBetAmount: (amount) => {
+                set({ betAmount: amount })
+            },
+
             darkMode: true,
             toggleDarkMode: () => set({ darkMode: !get().darkMode }),
             setDarkMode: (mode) => set({ darkMode: mode }),
@@ -29,13 +34,14 @@ export const useStore = create()(
             setTheme: (theme) => set({ theme }),
 
             balls: [],
-            addBall: (type) => {
+            addBall: (data) => {
                 set((prev) => ({
                     balls: [
                         ...prev.balls,
                         {
                             spawned: Date.now(),
-                            type
+                            ...data,
+                            amount: data?.amount || get().betAmount,
                         }
                     ]
                 }))
@@ -46,6 +52,9 @@ export const useStore = create()(
                         ...prev.balls.filter(obj => obj.spawned !== ball_id)
                     ]
                 }))
+            },
+            resetBalls: () => {
+                set({ balls: [] })
             },
 
             debug: false,
@@ -74,7 +83,22 @@ export const useStore = create()(
                 set((prev) => ({
                     sceneOrientation: prev.sceneOrientation === "Flat" ? "Upright" : "Flat"
                 }))
-            }
+            },
+
+            showSettingsModal: false,
+            setShowSettingsModal: (show) => {
+                set({ showSettingsModal: show })
+            },
+
+            setShowCreditsModal: (show) => {
+                set({ showCreditsModal: show })
+            },
+            showCreditsModal: false,
+
+            showInfoModal: false,
+            setShowInfoModal: (show) => {
+                set({ showInfoModal: show })
+            },
 
         }),
         {

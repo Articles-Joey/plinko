@@ -18,6 +18,7 @@ export default function OnlineBalance({
     const wallet = useWallet(state => state.wallet);
     const setWallet = useWallet(state => state.setWallet);
 
+    const betAmount = useStore(state => state.betAmount);
     const balls = useStore(state => state.balls);
 
     const {
@@ -114,7 +115,7 @@ export default function OnlineBalance({
                     >
                         <span>Redeem Ball</span>
                         <span className="ms-2 badge bg-dark shadow-articles">
-                            -10 Points
+                            -{betAmount} Points
                         </span>
                     </ArticlesButton>
 

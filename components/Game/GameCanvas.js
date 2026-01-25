@@ -40,6 +40,7 @@ import SwimmingLane from './SwimmingLane';
 import { ModelQuaterniusFishingClownfish } from './Clownfish';
 import LightpostSingle from './LightpostSingle';
 import WalkingCrowd from './WalkingCrowd';
+import { GamepadOrbitController } from './GamepadOrbitController';
 
 function SpotLight(props) {
 
@@ -93,7 +94,7 @@ function CameraLogger() {
         }
     })
 
-    return <OrbitControls ref={controlsRef} />
+    return <OrbitControls ref={controlsRef} makeDefault />
 }
 
 function BeachSides() {
@@ -146,6 +147,8 @@ function GameCanvas({ scale, children }) {
     const darkMode = useStore(state => state.darkMode)
     const toggleDarkMode = useStore(state => state.toggleDarkMode)
 
+    const betAmount = useStore(state => state.betAmount);
+
     const balls = useStore(state => state.balls)
     const addBall = useStore(state => state.addBall)
     const debug = useStore(state => state.debug)
@@ -166,7 +169,9 @@ function GameCanvas({ scale, children }) {
 
     useHotkeys('3', () => {
         console.log("Ball")
-        addBall("Online")
+        addBall({
+            type: "Online"
+        })
         // setBallCount(ballCount + 1)
         // setActiveBalls(prev => [
         //     ...prev,
@@ -178,10 +183,12 @@ function GameCanvas({ scale, children }) {
 
     useHotkeys('4', () => {
         console.log("Ball")
-        addBall("Offline")
+        addBall({
+            type: "Offline"
+        })
         setOfflineWallet({
             ...offlineWallet,
-            total: (offlineWallet?.total || 0) - 10
+            total: (offlineWallet?.total || 0) - betAmount
         })
 
         // setBallCount(ballCount + 1)
@@ -298,7 +305,7 @@ function GameCanvas({ scale, children }) {
                                         intensity={50}
                                         distance={80}
                                         color={'yellow'}
-                                        // castShadow
+                                    // castShadow
                                     />
 
                                     <pointLight
@@ -306,7 +313,7 @@ function GameCanvas({ scale, children }) {
                                         intensity={50}
                                         distance={80}
                                         color={'yellow'}
-                                        // castShadow
+                                    // castShadow
                                     />
                                 </>}
 
@@ -330,7 +337,7 @@ function GameCanvas({ scale, children }) {
                                         intensity={50}
                                         distance={80}
                                         color={'yellow'}
-                                        // castShadow
+                                    // castShadow
                                     />
 
                                     <pointLight
@@ -338,7 +345,7 @@ function GameCanvas({ scale, children }) {
                                         intensity={50}
                                         distance={80}
                                         color={'yellow'}
-                                        // castShadow
+                                    // castShadow
                                     />
                                 </>}
 
@@ -376,7 +383,7 @@ function GameCanvas({ scale, children }) {
                     position={[-1, 0, 0]}
                     scale={2.5}
                 />
-            </group>            
+            </group>
 
             {/* BoardwalkBuildings */}
             <group
@@ -416,7 +423,7 @@ function GameCanvas({ scale, children }) {
                                 distance={80}
                                 color={'yellow'}
                                 scale={1}
-                                // castShadow
+                            // castShadow
                             />
 
                             {/* <pointLight
@@ -613,7 +620,17 @@ function GameCanvas({ scale, children }) {
     return (
         <>
             {!reload &&
-                <Canvas camera={{ position: [0, 20, 180], fov: 50 }}>
+                <Canvas
+                    camera={{
+                        position:
+                            sceneOrientation == "Flat" ?
+                                [100, 100, 100]
+                                :
+                                [0, 20, 180]
+                        ,
+                        fov: 50
+                    }}
+                >
 
                     <hemisphereLight color="gray" groundColor="black" intensity={darkMode ? 0.5 : 1} />
 
@@ -630,7 +647,12 @@ function GameCanvas({ scale, children }) {
                     <spotLight ref={light} position={[50, 50, 40]} angle={0.15} penumbra={1} color={'red'} /> */}
 
                     <Sky
-                        sunPosition={[0, 10, -200]}
+                        sunPosition={
+                            darkMode ?
+                                [0, -10, 200]
+                                :
+                                [0, 10, -200]
+                        }
                     />
 
                     <group
@@ -641,20 +663,22 @@ function GameCanvas({ scale, children }) {
                         ]}
                     >
                         <SailingShip
-    
+
                         />
-    
+
                         <WalkingCrowd />
-    
+
                         <Physics gravity={[0, -30, 0]}>
-    
+
                             {physicsContent}
-    
+
                         </Physics>
-    
+
                         {/* <OrbitControls /> */}
-    
+
                         <CameraLogger />
+
+                        <GamepadOrbitController />
                     </group>
 
                 </Canvas>

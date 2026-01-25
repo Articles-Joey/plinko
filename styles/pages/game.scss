@@ -244,13 +244,32 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 11;
-        background-color: rgba(255, 255, 255, 0.5);
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5);
         padding: 0.1rem 0.5rem;
 
         // @include media-breakpoint-up(lg) {
         //     display: none;
         // }
+
+        .redeem-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .btn {
+                flex-shrink: 0;
+            }
+
+            @include media-breakpoint-down(lg) {
+                transform: scale(0.95);
+                position: absolute;
+                top: -50px;
+                left: 0;
+                right: 0;
+            }
+
+        }
     }
 
     .game-content {

@@ -118,7 +118,7 @@ export default function CreditsModal({
                         }}
                         className="d-flex align-items-center"
                     >
-                        <img src={B.src} className="me-1" alt="Close" />
+                        <img src={B} className="me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 

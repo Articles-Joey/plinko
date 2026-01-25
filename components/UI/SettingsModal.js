@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Modal, Form } from "react-bootstrap"
 
 import ArticlesButton from "@/components/UI/Button";
+import { useStore } from "@/hooks/useStore";
+
+import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useModalNavigation } from "@/hooks/useModalNavigation";
 
 export default function FourFrogsSettingsModal({
     show,
@@ -11,9 +15,19 @@ export default function FourFrogsSettingsModal({
 
     const [showModal, setShowModal] = useState(true)
 
-    const [lightboxData, setLightboxData] = useState(null)
+    // const [lightboxData, setLightboxData] = useState(null)
 
     const [tab, setTab] = useState('Graphics')
+
+    const darkMode = useStore(state => state.darkMode);
+    const toggleDarkMode = useStore(state => state.toggleDarkMode);
+
+    const sceneOrientation = useStore(state => state.sceneOrientation);
+    const setSceneOrientation = useStore(state => state.setSceneOrientation);
+    const toggleSceneOrientation = useStore(state => state.toggleSceneOrientation);
+
+    const elementsRef = useRef([]);
+    useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
         <>
@@ -55,7 +69,7 @@ export default function FourFrogsSettingsModal({
                             'Graphics',
                             'Controls',
                             'Audio',
-                            'Chat'
+                            // 'Chat'
                         ].map(item =>
                             <ArticlesButton
                                 key={item}
@@ -72,51 +86,76 @@ export default function FourFrogsSettingsModal({
                     <div className="p-2">
                         {tab == 'Graphics' &&
                             <>
-                                TODO
+                                <div className="">
+                                    <div className="d-flex align-items-center">
+                                        <Form.Check
+                                            // ref={el => elementsRef.current[4] = el}
+                                            type="switch"
+                                            id="dark-mode-switch"
+                                            label="Dark Mode"
+                                            // value={enabled}
+                                            checked={darkMode}
+                                            onChange={() => {
+                                                toggleDarkMode();
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="small mt-2">
+                                        {`Dark Mode changes the game's color scheme to be easier on the eyes in low light environments.`}
+                                    </div>
+                                </div>
+
+                                <hr className="my-2" />
+
+                                <div className="">
+                                    <div className="">SceneOrientation</div>
+                                    <div className="d-flex align-items-center">
+                                        <ArticlesButton
+                                            className=""
+                                            small
+                                            active={sceneOrientation == "Flat"}
+                                            onClick={() => {
+                                                setSceneOrientation("Flat");
+                                            }}
+                                        >
+                                            Flat
+                                        </ArticlesButton>
+                                        <ArticlesButton
+                                            className=""
+                                            small
+                                            active={sceneOrientation == "Upright"}
+                                            onClick={() => {
+                                                setSceneOrientation("Upright");
+                                            }}
+                                        >
+                                            Upright
+                                        </ArticlesButton>
+                                    </div>
+                                    <div className="small mt-2">
+                                        {`SceneOrientation changes the orientation of the game scene to suit your preference.`}
+                                    </div>
+                                </div>
                             </>
                         }
                         {tab == 'Controls' &&
                             <div>
                                 {[
                                     {
-                                        action: 'Move Up',
-                                        defaultKeyboardKey: 'W'
+                                        action: 'Redeem Online Ball',
+                                        defaultKeyboardKey: '1'
                                     },
                                     {
-                                        action: 'Move Down',
-                                        defaultKeyboardKey: 'S'
+                                        action: 'Claim Online Points',
+                                        defaultKeyboardKey: '2'
                                     },
                                     {
-                                        action: 'Move Left',
-                                        defaultKeyboardKey: 'A'
+                                        action: 'Redeem Offline Ball',
+                                        defaultKeyboardKey: '3'
                                     },
                                     {
-                                        action: 'Move Right',
-                                        defaultKeyboardKey: 'D'
+                                        action: 'Claim Offline Points',
+                                        defaultKeyboardKey: '4'
                                     },
-                                    {
-                                        action: 'Drop Insect',
-                                        defaultKeyboardKey: 'Space'
-                                    },
-                                    {
-                                        action: 'Stop Powerup',
-                                        defaultKeyboardKey: 'ArrowDown'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Stick out Tongue',
-                                        defaultKeyboardKey: 'ArrowDown'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Rotate Left',
-                                        defaultKeyboardKey: 'ArrowLeft'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Rotate Right',
-                                        defaultKeyboardKey: 'ArrowRight'
-                                    }
                                 ].map(obj =>
                                     <div key={obj.action}>
                                         <div className="flex-header border-bottom pb-1 mb-1">
@@ -176,35 +215,24 @@ export default function FourFrogsSettingsModal({
 
                 <Modal.Footer className="justify-content-between">
 
-                    {/* <div></div> */}
+                    <ArticlesButton
+                        variant="outline-dark"
+                        onClick={() => {
+                            setShow(false)
+                        }}
+                    >
+                        <img src={B} className="me-1" alt="Close" />
+                        Close
+                    </ArticlesButton>
 
-
-                    <div>
-
-                        <ArticlesButton
-                            variant="outline-dark"
-                            onClick={() => {
-                                setShow(false)
-                            }}
-                        >
-                            Close
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            variant="outline-danger ms-3"
-                            onClick={() => {
-                                setShow(false)
-                            }}
-                        >
-                            Reset
-                        </ArticlesButton>
-
-                    </div>
-
-
-                    {/* <ArticlesButton variant="success" onClick={() => setValue(false)}>
-                    Save
-                </ArticlesButton> */}
+                    <ArticlesButton
+                        variant="outline-danger ms-3"
+                        onClick={() => {
+                            setShow(false)
+                        }}
+                    >
+                        Reset
+                    </ArticlesButton>
 
                 </Modal.Footer>
 
