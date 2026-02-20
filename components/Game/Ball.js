@@ -12,6 +12,9 @@ import { useWallet } from '@/hooks/useWallet';
 import generateRandomInteger from '@/hooks/generateRandomInteger';
 import { useOfflineWallet } from '@/hooks/useOfflineWallet';
 
+import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
+import useUserToken from '@articles-media/articles-dev-box/useUserToken';
+
 const Ball = (props) => {
 
     const { ball_key, activeBalls, item } = props
@@ -24,7 +27,25 @@ const Ball = (props) => {
     const setOfflineWallet = useOfflineWallet(state => state.setWallet);
 
     // const userReduxState = useSelector((state) => state.auth.user_details)
-    const userReduxState = false
+    // const userReduxState = false
+
+    const {
+        data: userToken,
+        error: userTokenError,
+        isLoading: userTokenLoading,
+        mutate: userTokenMutate
+    } = useUserToken(
+        "3017"
+    );
+
+    const {
+        data: userDetails,
+        error: userDetailsError,
+        isLoading: userDetailsLoading,
+        mutate: userDetailsMutate
+    } = useUserDetails({
+        token: userToken
+    });
 
     const { balls, removeBall } = useStore()
 
@@ -42,6 +63,7 @@ const Ball = (props) => {
         angularVelocity: angularVelocity,
         userData: {
             type: item.type,
+            betAmount: item.betAmount
         },
         onCollide: (e) => {
 
@@ -62,12 +84,17 @@ const Ball = (props) => {
 
                 if (item.type === "Online") {
 
-                    if (userReduxState?._id) {
+                    if (userDetails?.user_id) {
 
-                        axios.post('/api/user/community/games/plinko/ball/score', {
-                            ball_key,
-                            score: e?.body?.userData?.score
-                        })
+                        axios.post(
+                            // '/api/user/community/games/plinko/ball/score',
+                            "/api/user/ball/score",
+                            {
+                                ball_key,
+                                score: e?.body?.userData?.score,
+                                betAmount: item.betAmount
+                            }
+                        )
                             .then(response => {
 
                                 console.log(response.data)

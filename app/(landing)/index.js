@@ -52,8 +52,10 @@ import useUserToken from '@articles-media/articles-dev-box/useUserToken';
 import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
 import { useOfflineWallet } from '@/hooks/useOfflineWallet';
 import RedeemBallButton from '@/components/UI/RedeemBallButton';
-import { set } from 'date-fns';
+// import { set } from 'date-fns';
 import BetAmountButton from '@/components/UI/BetAmountButton';
+// import { useThree } from '@react-three/fiber';
+import { useCameraStore } from '@/hooks/useCameraStore';
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
@@ -71,14 +73,14 @@ export default function PlinkoPage(props) {
         "3017"
     );
 
-    const {
-        data: userDetails,
-        error: userDetailsError,
-        isLoading: userDetailsLoading,
-        mutate: userDetailsMutate
-    } = useUserDetails({
-        token: userToken
-    });
+    // const {
+    //     data: userDetails,
+    //     error: userDetailsError,
+    //     isLoading: userDetailsLoading,
+    //     mutate: userDetailsMutate
+    // } = useUserDetails({
+    //     token: userToken
+    // });
 
     // const [wallet, setWallet] = useState({
     //     total: 0
@@ -91,6 +93,8 @@ export default function PlinkoPage(props) {
 
     // const teleportLocation = useStore(state => state.teleportLocation)
     const setTeleportLocation = useStore(state => state.setTeleportLocation)
+    const setTeleportTarget = useStore(state => state.setTeleportTarget)
+    const setTeleportZoom = useStore(state => state.setTeleportZoom)
 
     const setShowSettingsModal = useStore(state => state.setShowSettingsModal)
     const setShowCreditsModal = useStore(state => state.setShowCreditsModal)
@@ -118,7 +122,7 @@ export default function PlinkoPage(props) {
     //     addBall 
     // } = useStore()
 
-    const balls = useStore(state => state.balls);
+    // const balls = useStore(state => state.balls);
     // const removeBall = useStore(state => state.removeBall);
     const addBall = useStore(state => state.addBall);
     const debug = useStore(state => state.debug);
@@ -131,7 +135,7 @@ export default function PlinkoPage(props) {
     const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
 
     // const userReduxState = useSelector((state) => state.auth.user_details)
-    const userReduxState = false
+    // const userReduxState = false
 
     // const [menuOpen, setMenuOpen] = useState(false)
 
@@ -168,13 +172,14 @@ export default function PlinkoPage(props) {
         } else {
 
             axios.post(
-                process.env.NODE_ENV === 'production' ?
-                    'https://articles.media/api/user/community/games/plinko/ball/redeem'
-                    :
-                    'http://localhost:3001/api/user/community/games/plinko/ball/redeem'
+                // process.env.NODE_ENV === 'production' ?
+                //     'https://articles.media/api/user/community/games/plinko/ball/redeem'
+                //     :
+                //     'http://localhost:3001/api/user/community/games/plinko/ball/redeem'
+                "/api/user/ball/redeem"
                 ,
                 {
-
+                    betAmount
                 },
                 {
                     headers: {
@@ -190,7 +195,8 @@ export default function PlinkoPage(props) {
                         total: response.data.total
                     })
                     addBall({
-                        type: "Online"
+                        type: "Online",
+                        betAmount: betAmount
                     })
 
                 })
@@ -425,33 +431,77 @@ export default function PlinkoPage(props) {
 
                                     {[
                                         {
+                                            name: 'Default',
+                                            position: [0, 20, 180],
+                                            flatPosition: [100, 100, 100],
+                                        },
+                                        {
                                             name: 'Birds Eye View',
-                                            position: [0, 20, 180]
+                                            position: [0, 20, 180],
+                                            flatPosition: [
+                                                0, 120, 0
+                                            ],
                                         },
                                         {
                                             name: 'Boardwalk',
-                                            position: [.68, -89.63, 50.77]
+                                            position: [.68, -89.63, 50.77],
+                                            flatPosition: [
+                                                0, 55, 95
+                                            ],
                                         },
                                         {
                                             name: 'Ships View',
                                             position: [-0.49, -77.43, -25.66],
+                                            flatPosition: [
+                                                0, 30, -120
+                                            ],
                                         },
                                         {
-                                            name: 'Rooftops',
-                                            position: [-42.58, -123.81, 97.85]
+                                            name: 'Rooftop Camera',
+                                            position: [-42.58, -123.81, 97.85],
+                                            // flatPosition:
+                                            //     // [
+                                            //     //     106.83795890985124,
+                                            //     //     78.22706590907961,
+                                            //     //     111.65203399505641
+                                            //     // ]
+                                            //     [
+                                            //     180.9748986487864,
+                                            //     54.748483681556614,
+                                            //     93.92405204637862
+                                            //     ],
                                         }
                                     ]
                                         .map(location =>
                                             <Dropdown.Item
                                                 key={location.name}
                                                 onClick={() => {
-                                                    // setDebug(location.name)
                                                     console.log(location)
-                                                    // const { camera } = useThree();
-                                                    // camera.position.set(...location.position);
-                                                    // camera.lookAt(0, 0, 0);
 
-                                                    setTeleportLocation(location.position);
+                                                    if (sceneOrientation === 'Flat') {
+
+                                                        setTeleportLocation(location.flatPosition)
+
+                                                        if (location.name === 'Rooftop Camera') {
+                                                            setTeleportTarget([
+                                                180.9748986487864,
+                                                54.748483681556614,
+                                                93.92405204637862
+                                                ])
+                                                            setTeleportZoom(0.1)
+                                                        } else {
+                                                            setTeleportTarget([0, 0, 0])
+                                                            setTeleportZoom(170)
+                                                        }
+
+                                                    } else {
+
+                                                        setTeleportLocation(location.position);
+                                                        setTeleportTarget([0, 0, 0])
+                                                        setTeleportZoom(170)
+
+                                                    }
+
                                                     setMenuOpen(false)
                                                 }}
                                                 className="d-flex justify-content-between"
@@ -464,6 +514,8 @@ export default function PlinkoPage(props) {
 
                             </DropdownButton>
                         </div>
+
+                        {/* <LogCameraLocationButton /> */}
 
                         <div className='w-50'>
                             <ArticlesButton
@@ -549,7 +601,7 @@ export default function PlinkoPage(props) {
                             <i className='fad fa-sync-alt'></i>
                             <span
                                 style={{
-                                    fontSize: '0.7rem'
+                                    fontSize: '0.65rem'
                                 }}
                             >
                                 {/* Orientation:  */}
@@ -622,7 +674,7 @@ export default function PlinkoPage(props) {
 
                 </div>
 
-            </div>
+            </div >
 
             <div className="menu-bar">
 
@@ -699,6 +751,28 @@ export default function PlinkoPage(props) {
 
             {/* <Ad section={"Games"} section_id={'Plinko'} /> */}
 
-        </div>
+        </div >
     )
+}
+
+function LogCameraLocationButton() {
+
+    // const { camera } = useThree();
+    const cameraPosition = useCameraStore(state => state.cameraPosition);
+    const cameraTarget = useCameraStore(state => state.cameraTarget);
+
+    return (
+        <ArticlesButton
+            small
+            className="w-100"
+            onClick={() => {
+                console.log("Camera position:", cameraPosition);
+                console.log("Camera target:", cameraTarget);
+            }}
+        >
+            <span className='ms-1'>Log Camera Location</span>
+
+        </ArticlesButton>
+    )
+
 }

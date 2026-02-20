@@ -21,6 +21,7 @@ import Umbrella from './Umbrella';
 import SlotPads from './SlotPads';
 // import { SpotLightHelper } from 'three';
 import { useStore } from '@/hooks/useStore';
+// import { useCameraStore } from '@/hooks/useCameraStore';
 import Sand from './Sand';
 import Boardwalk from './Boardwalk';
 
@@ -42,6 +43,8 @@ import LightpostSingle from './LightpostSingle';
 import WalkingCrowd from './WalkingCrowd';
 import { GamepadOrbitController } from './GamepadOrbitController';
 import BoardwalkLights from './BoardwalkLights';
+import CameraLogger from './CameraLogger';
+import { ModelSecurityCamera } from './Security Camera';
 
 function SpotLight(props) {
 
@@ -51,51 +54,6 @@ function SpotLight(props) {
     return (
         <spotLight ref={light} intensity={300000} position={props.position} angle={0.75} penumbra={1} color={'orange'} />
     )
-}
-
-function CameraLogger() {
-    const controlsRef = useRef()
-    const { camera } = useThree()
-
-    const teleportLocation = useStore(state => state.teleportLocation)
-    const setTeleportLocation = useStore(state => state.setTeleportLocation)
-
-    useEffect(() => {
-
-        if (teleportLocation) {
-            console.log("New value detected for teleportLocation", teleportLocation)
-            camera.position.set(...teleportLocation)
-            camera.lookAt(0, 0, 0)
-            setTeleportLocation(false)
-        }
-
-    }, [teleportLocation])
-
-    // useFrame(state => {
-    //     state.camera.lerp({ x, y, z }, 0.1)
-    //     state.camera.lookAt(0, 0, 0)
-    // })
-
-    useFrame(() => {
-
-        // For logging camera position for debugging
-        return
-
-        if (controlsRef.current) {
-            // Logs the camera position every frame
-            console.log(
-                `Camera position: x=${camera.position.x.toFixed(2)}, y=${camera.position.y.toFixed(2)}, z=${camera.position.z.toFixed(2)}`
-            )
-
-            // Optional: Log target too
-            const target = controlsRef.current.target
-            console.log(
-                `Target: x=${target.x.toFixed(2)}, y=${target.y.toFixed(2)}, z=${target.z.toFixed(2)}`
-            )
-        }
-    })
-
-    return <OrbitControls ref={controlsRef} makeDefault />
 }
 
 function BeachSides() {
@@ -170,9 +128,9 @@ function GameCanvas({ scale, children }) {
 
     useHotkeys('3', () => {
         console.log("Ball")
-        addBall({
-            type: "Online"
-        })
+        // addBall({
+        //     type: "Online"
+        // })
         // setBallCount(ballCount + 1)
         // setActiveBalls(prev => [
         //     ...prev,
@@ -288,12 +246,12 @@ function GameCanvas({ scale, children }) {
                 />
 
                 {/* Boardwalk Lights */}
-                
+
             </group>
 
             <Suspense>
                 <BoardwalkLights />
-            </Suspense>           
+            </Suspense>
 
             {/* On Beach */}
             <group
@@ -564,8 +522,19 @@ function GameCanvas({ scale, children }) {
                             0
                         ]}
                     >
+
                         <SailingShip
 
+                        />
+
+                        <ModelSecurityCamera
+                            position={[
+                                180.9774810508111,
+                                -94.8,
+                                54.741008998981336
+                            ]}
+                            rotation={[degToRad(80), degToRad(-90), 0]}
+                            scale={0.5}
                         />
 
                         <WalkingCrowd />

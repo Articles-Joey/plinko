@@ -18,13 +18,15 @@ Handled by a MongoDB database, schema available inside db-schema.js
 
 ## Attributions
 
-[Ship Model (Kenney)](https://kenney.nl/assets/pirate-kit)
+[Ship Model - Kenney](https://kenney.nl/assets/pirate-kit)
 
-[Food Models (Quaternius)](https://quaternius.com/packs/junkfood.html)
+[Food Models - Quaternius](https://quaternius.com/packs/junkfood.html)
 
-[People Models (Quaternius)](https://quaternius.com/packs/ultimatemodularcharacters.html)
+[People Models - Quaternius](https://quaternius.com/packs/ultimatemodularcharacters.html)
 
-[Building Models (JToastie)](https://poly.pizza/u/J-Toastie)
+[Building Models - JToastie](https://poly.pizza/u/J-Toastie)
+
+[Security Camera Modal - JToastie](https://poly.pizza/m/a6J7IDufQP)
 
 [Beach Ball Texture](https://github.com/Articles-Joey/plinko)
 

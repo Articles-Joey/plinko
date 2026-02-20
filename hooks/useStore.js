@@ -69,6 +69,16 @@ export const useStore = create()(
                 set({ teleportLocation: location })
             },
 
+            teleportTarget: false,
+            setTeleportTarget: (target) => {
+                set({ teleportTarget: target })
+            },
+
+            teleportZoom: false,
+            setTeleportZoom: (zoom) => {
+                set({ teleportZoom: zoom })
+            },
+
             menuOpen: false,
             setMenuOpen: (open) => {
                 set({ menuOpen: open })

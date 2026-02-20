@@ -65,9 +65,10 @@ export default function OnlineBalance({
             .then(response => {
 
                 console.log("Claim Response:", response.data)
+
                 setWallet({
                     ...wallet,
-                    total: response.data.total + 100
+                    total: wallet.total + 100
                 })
 
                 // const tempBoard = leaderboard.map(obj => obj.user_id == session.user._id ? { ...obj, total: wallet, last_play: new Date() } : obj)

@@ -10,7 +10,7 @@ export async function POST(req) {
     const db = (await clientPromise).db();
     const userId = req.headers.get('x-user-id');
 
-    const { score, ball_key } = await req.json();
+    const { score, ball_key, betAmount } = await req.json();
 
     // Check wallet
     var result = await db
@@ -36,7 +36,7 @@ export async function POST(req) {
     // Add to wallet
     if (result) {
 
-        let calculatedScore = 10 * score
+        let calculatedScore = (betAmount || 10) * score
 
         const update_result = await db
             .collection("game-plinko-scores")
