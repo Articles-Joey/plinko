@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, memo } from 'react';
+import { useEffect, useState, useRef, memo, Suspense } from 'react';
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Cylinder, OrbitControls, Sky } from '@react-three/drei'
@@ -41,6 +41,7 @@ import { ModelQuaterniusFishingClownfish } from './Clownfish';
 import LightpostSingle from './LightpostSingle';
 import WalkingCrowd from './WalkingCrowd';
 import { GamepadOrbitController } from './GamepadOrbitController';
+import BoardwalkLights from './BoardwalkLights';
 
 function SpotLight(props) {
 
@@ -287,74 +288,12 @@ function GameCanvas({ scale, children }) {
                 />
 
                 {/* Boardwalk Lights */}
-                <group>
-                    <group position={[-96, -5, 0]}>
-                        {[...Array(5)].map((_, index) => (
-                            <group
-                                key={index}
-                                position={[0, index * 17, 0]} // Increment x-position by 1 for each building
-                                rotation={[-Math.PI / -2, degToRad(-90), 0]}
-                                scale={[8, 10, 8]}
-                            >
-
-                                <LightpostSingle />
-
-                                {darkMode && <>
-                                    <pointLight
-                                        position={[0, 1, 0.5]}
-                                        intensity={50}
-                                        distance={80}
-                                        color={'yellow'}
-                                    // castShadow
-                                    />
-
-                                    <pointLight
-                                        position={[0, 1, 0]}
-                                        intensity={50}
-                                        distance={80}
-                                        color={'yellow'}
-                                    // castShadow
-                                    />
-                                </>}
-
-                            </group>
-                        ))}
-                    </group>
-                    <group position={[-4, -5, 0]}>
-                        {[...Array(5)].map((_, index) => (
-                            <group
-                                key={index}
-                                position={[0, index * 17, 0]} // Increment x-position by 1 for each building
-                                rotation={[-Math.PI / -2, degToRad(90), 0]}
-                                scale={[8, 10, 8]}
-                            >
-
-                                <LightpostSingle />
-
-                                {darkMode && <>
-                                    <pointLight
-                                        position={[0, 1, 0.5]}
-                                        intensity={50}
-                                        distance={80}
-                                        color={'yellow'}
-                                    // castShadow
-                                    />
-
-                                    <pointLight
-                                        position={[0, 1, 0]}
-                                        intensity={50}
-                                        distance={80}
-                                        color={'yellow'}
-                                    // castShadow
-                                    />
-                                </>}
-
-                            </group>
-                        ))}
-                    </group>
-                </group>
-
+                
             </group>
+
+            <Suspense>
+                <BoardwalkLights />
+            </Suspense>           
 
             {/* On Beach */}
             <group
@@ -399,43 +338,6 @@ function GameCanvas({ scale, children }) {
                     // scale={6}
                     >
                         <ModelJToastieBuildingRed />
-                    </group>
-                ))}
-            </group>
-
-            {/* Boardwalk Lights */}
-            <group position={[-200, 0, 0]}>
-                {[...Array(21)].map((_, index) => (
-                    <group
-                        key={index}
-                        position={[index * 20, -75, 34.5]} // Increment x-position by 1 for each building
-                        rotation={[-Math.PI / -2, degToRad(0), 0]}
-                        scale={[8, 10, 8]}
-                    >
-
-                        <LightpostSingle />
-
-                        {darkMode && <>
-
-                            <pointLight
-                                position={[0, 1, 0.5]}
-                                intensity={50}
-                                distance={80}
-                                color={'yellow'}
-                                scale={1}
-                            // castShadow
-                            />
-
-                            {/* <pointLight
-                                position={[0, 1, 0]}
-                                intensity={50}
-                                distance={80}
-                                color={'yellow'}
-                                // castShadow
-                            /> */}
-
-                        </>}
-
                     </group>
                 ))}
             </group>
