@@ -323,7 +323,16 @@ export default function PlinkoPage(props) {
 
             </div>
 
-            <div className={`menu-card ${menuOpen && 'show'} ${showSidebar ? 'sidebar' : 'no-sidebar'}`}>
+            <div
+                className={`menu-card ${menuOpen && 'show'} ${showSidebar ? 'sidebar' : 'no-sidebar'}`}
+            >
+
+                <div
+                    className="menu-card-background"
+                    onClick={() => {
+                        setMenuOpen(false)
+                    }}
+                ></div>
 
                 <div className='wrap'>
 
@@ -484,10 +493,10 @@ export default function PlinkoPage(props) {
 
                                                         if (location.name === 'Rooftop Camera') {
                                                             setTeleportTarget([
-                                                180.9748986487864,
-                                                54.748483681556614,
-                                                93.92405204637862
-                                                ])
+                                                                180.9748986487864,
+                                                                54.748483681556614,
+                                                                93.92405204637862
+                                                            ])
                                                             setTeleportZoom(0.1)
                                                         } else {
                                                             setTeleportTarget([0, 0, 0])
@@ -617,19 +626,33 @@ export default function PlinkoPage(props) {
 
                         </ArticlesButton>
 
-                        <ArticlesButton
-                            small
-                            // id="toggle-sidebar-button"
-                            className="w-50"
-                            onClick={() => {
-                                setShowSettingsModal(true)
-                            }}
-                        >
+                        <div className='d-flex w-50'>
+                            <ArticlesButton
+                                small
+                                // id="toggle-sidebar-button"
+                                className="w-100"
+                                onClick={() => {
+                                    setShowSettingsModal(true)
+                                }}
+                            >
 
-                            <i className="fad fa-cog"></i>
-                            Settings
+                                <i className="fad fa-cog"></i>
+                                Settings
 
-                        </ArticlesButton>
+                            </ArticlesButton>
+                            <ArticlesButton
+                                small
+                                // id="toggle-sidebar-button"
+                                className=""
+                                onClick={() => {
+                                    toggleDarkMode(true)
+                                }}
+                            >
+
+                                <i className="fad fa-sun"></i>
+
+                            </ArticlesButton>
+                        </div>
 
                     </div>
 

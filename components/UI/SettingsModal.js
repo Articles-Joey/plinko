@@ -22,6 +22,9 @@ export default function FourFrogsSettingsModal({
     const darkMode = useStore(state => state.darkMode);
     const toggleDarkMode = useStore(state => state.toggleDarkMode);
 
+    const graphicsQuality = useStore(state => state.graphicsQuality);
+    const setGraphicsQuality = useStore(state => state.setGraphicsQuality);
+
     const sceneOrientation = useStore(state => state.sceneOrientation);
     const setSceneOrientation = useStore(state => state.setSceneOrientation);
     const toggleSceneOrientation = useStore(state => state.toggleSceneOrientation);
@@ -108,7 +111,48 @@ export default function FourFrogsSettingsModal({
                                 <hr className="my-2" />
 
                                 <div className="">
-                                    <div className="">SceneOrientation</div>
+                                    <div className="">Graphics Quality</div>
+                                    <div className="d-flex align-items-center">
+                                        <ArticlesButton
+                                            className=""
+                                            small
+                                            active={graphicsQuality == "Low"}
+                                            onClick={() => {
+                                                setGraphicsQuality("Low");
+                                            }}
+                                        >
+                                            Low
+                                        </ArticlesButton>
+                                        <ArticlesButton
+                                            className=""
+                                            small
+                                            active={graphicsQuality == "Medium"}
+                                            onClick={() => {
+                                                setGraphicsQuality("Medium");
+                                            }}
+                                        >
+                                            Medium
+                                        </ArticlesButton>
+                                        <ArticlesButton
+                                            className=""
+                                            small
+                                            active={graphicsQuality == "High"}
+                                            onClick={() => {
+                                                setGraphicsQuality("High");
+                                            }}
+                                        >
+                                            High
+                                        </ArticlesButton>
+                                    </div>
+                                    <div className="small mt-2">
+                                        {`Graphics Quality changes the quality of the game's graphics to suit your preference.`}
+                                    </div>
+                                </div>
+
+                                <hr className="my-2" />
+
+                                <div className="">
+                                    <div className="">Scene Orientation</div>
                                     <div className="d-flex align-items-center">
                                         <ArticlesButton
                                             className=""

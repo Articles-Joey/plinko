@@ -4,8 +4,12 @@ import { Model as ModelWomanCasual } from '@/components/Game/People/Casual';
 import { degToRad } from 'three/src/math/MathUtils';
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useStore } from '@/hooks/useStore';
 
 export default function WalkingCrowd() {
+
+    const graphicsQuality = useStore(state => state.graphicsQuality);
+
     // Checklist:
     // - move walkers along the z axis (looping path)
     // - spawn CLUSTERS clusters spread along the path
@@ -96,6 +100,10 @@ export default function WalkingCrowd() {
             }
         }
     });
+
+    if (graphicsQuality === 'Low') {
+        return null; // skip rendering walkers on low quality for performance
+    }
 
     return (
         <group position={[0, BASE_Y, BASE_Z]} rotation={[degToRad(90), degToRad(-90), 0]}>

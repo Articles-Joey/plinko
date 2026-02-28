@@ -1,6 +1,6 @@
 # Plinko
 
-![Game Preview](public/img/preview.png)
+![Preview](public/img/background.webp)
 
 Play without the fear of losing your money! This site offers an offline balance and an online balance. Both balances only allow the user to claim 100 points every 24 hours. Online balance API is hosted on this site and utilizes the login system of Articles Media to authenticate users.
 
@@ -34,6 +34,6 @@ Handled by a MongoDB database, schema available inside db-schema.js
 
 [Beach Ball Icon](https://www.flaticon.com/free-icon/beach-ball_10725946)
 
-## Inspiration
+## TODO
 
 ...

@@ -30,6 +30,10 @@ export const useStore = create()(
             toggleDarkMode: () => set({ darkMode: !get().darkMode }),
             setDarkMode: (mode) => set({ darkMode: mode }),
 
+
+            graphicsQuality: "High",
+            setGraphicsQuality: (value) => set({ graphicsQuality: value }),
+
             theme: null,
             setTheme: (theme) => set({ theme }),
 
