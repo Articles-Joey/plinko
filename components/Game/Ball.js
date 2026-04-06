@@ -7,7 +7,7 @@ import { useBox, usePlane, useSphere } from '@react-three/cannon';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { BeachBall } from './BeachBall';
 import { useStore } from '@/hooks/useStore';
-import axios from 'axios';
+
 import { useWallet } from '@/hooks/useWallet';
 import generateRandomInteger from '@/hooks/generateRandomInteger';
 import { useOfflineWallet } from '@/hooks/useOfflineWallet';
@@ -86,27 +86,34 @@ const Ball = (props) => {
 
                     if (userDetails?.user_id) {
 
-                        axios.post(
-                            // '/api/user/community/games/plinko/ball/score',
-                            "/api/user/ball/score",
-                            {
+                        fetch("/api/user/ball/score", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
                                 ball_key,
                                 score: e?.body?.userData?.score,
                                 betAmount: item.betAmount
-                            }
-                        )
-                            .then(response => {
-
-                                console.log(response.data)
+                            })
+                        })
+                            .then(async (res) => {
+                                if (!res.ok) {
+                                    const error = await res.text();
+                                    throw new Error(error || 'Fetch error');
+                                }
+                                return res.json();
+                            })
+                            .then(data => {
+                                console.log(data)
                                 setWallet({
                                     ...wallet,
-                                    total: response.data.total
+                                    total: data.total
                                 })
                                 removeBall(ball_key)
-
                             })
-                            .catch(response => {
-                                console.log(response.data)
+                            .catch(error => {
+                                console.log(error)
                             })
 
                     } else {

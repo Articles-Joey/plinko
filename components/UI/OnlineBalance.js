@@ -1,15 +1,15 @@
 // import { useOfflineWallet } from "@/hooks/useOfflineWallet";
 import { useStore } from "@/hooks/useStore";
 // import ArticlesSignInButton from "../ArticlesSignInButton";
-import useUserToken from "@/hooks/useUserToken";
-import useUserDetails from "@/hooks/useUserDetails";
+import useUserToken from '@articles-media/articles-dev-box/useUserToken';
+import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
 import ArticlesButton from "@/components/UI/Button";
 
 import Countdown from 'react-countdown';
 import { add, differenceInHours, format } from 'date-fns';
 import { useWallet } from "@/hooks/useWallet";
 import { useEffect } from "react";
-import axios from "axios";
+
 
 export default function OnlineBalance({
     redeemBall,
@@ -26,7 +26,7 @@ export default function OnlineBalance({
         error: userTokenError,
         isLoading: userTokenLoading,
         mutate: userTokenMutate
-    } = useUserToken();
+    } = useUserToken("3017");
 
     const {
         data: userDetails,
@@ -37,17 +37,23 @@ export default function OnlineBalance({
         token: userToken
     });
 
+
     function getBalance() {
-        axios.get('/api/user/wallet')
-            .then(response => {
-                console.log(response.data)
-
-                setWallet(response.data)
-                // setLastClaim(response.data.last_claim)
-
+        fetch('/api/user/wallet')
+            .then(async (res) => {
+                if (!res.ok) {
+                    const error = await res.text();
+                    throw new Error(error || 'Fetch error');
+                }
+                return res.json();
             })
-            .catch(response => {
-                console.log(response.data)
+            .then(data => {
+                console.log(data)
+                setWallet(data)
+                // setLastClaim(data.last_claim)
+            })
+            .catch(error => {
+                console.log(error)
             })
     }
 
@@ -60,27 +66,28 @@ export default function OnlineBalance({
     }, [userDetails?.user_id])
 
     function claim() {
-
-        axios.post('/api/user/claim')
-            .then(response => {
-
-                console.log("Claim Response:", response.data)
-
+        fetch('/api/user/claim', { method: 'POST' })
+            .then(async (res) => {
+                if (!res.ok) {
+                    const error = await res.text();
+                    throw new Error(error || 'Fetch error');
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log("Claim Response:", data)
                 setWallet({
                     ...wallet,
                     total: wallet.total + 100
                 })
-
                 // const tempBoard = leaderboard.map(obj => obj.user_id == session.user._id ? { ...obj, total: wallet, last_play: new Date() } : obj)
                 // setLeaderboard(tempBoard)
-
                 // setLastClaim(new Date())
-                // setLeaderboard(response.data)
+                // setLeaderboard(data)
             })
-            .catch(response => {
-                console.log(response.data)
+            .catch(error => {
+                console.log(error)
             })
-
     }
 
     return (

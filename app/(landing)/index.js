@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
-import axios from 'axios'
+
 
 // import { useSelector, useDispatch } from 'react-redux';
 
@@ -171,37 +171,35 @@ export default function PlinkoPage(props) {
 
         } else {
 
-            axios.post(
-                // process.env.NODE_ENV === 'production' ?
-                //     'https://articles.media/api/user/community/games/plinko/ball/redeem'
-                //     :
-                //     'http://localhost:3001/api/user/community/games/plinko/ball/redeem'
-                "/api/user/ball/redeem"
-                ,
-                {
-                    betAmount
-                },
-                {
-                    headers: {
-                        "x-articles-api-key": userToken
-                    }
-                }
-            )
-                .then(response => {
 
-                    console.log(response.data)
+            fetch("/api/user/ball/redeem", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-articles-api-key": userToken
+                },
+                body: JSON.stringify({ betAmount })
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const error = await res.text();
+                        throw new Error(error || 'Fetch error');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data)
                     setWallet({
                         ...wallet,
-                        total: response.data.total
+                        total: data.total
                     })
                     addBall({
                         type: "Online",
                         betAmount: betAmount
                     })
-
                 })
-                .catch(response => {
-                    console.log(response.data)
+                .catch(error => {
+                    console.log(error)
                 })
 
         }

@@ -10,7 +10,7 @@ import { useRouter, usePathname } from 'next/navigation';
 
 // import { format } from 'date-fns'
 
-import axios from "axios";
+
 
 import { useSocketStore } from "@/hooks/useSocketStore";
 
@@ -221,14 +221,17 @@ export default function SocketLogicHandler(props) {
 
             // return
 
-            axios.get('/api/user/sockets/login', {
-                params: {
-                    socket: socket.id
-                }
-            })
-                .then((response) => {
+            fetch(`/api/user/sockets/login?socket=${encodeURIComponent(socket.id)}`)
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const error = await res.text();
+                        throw new Error(error || 'Fetch error');
+                    }
+                    return res.json();
+                })
+                .then((data) => {
                     console.log("[📶Socket] socket-login Success")
-                    console.log(response.data)
+                    console.log(data)
                     // setSocketData(prevState => ({
                     //     ...prevState,
                     //     authenticated: true
