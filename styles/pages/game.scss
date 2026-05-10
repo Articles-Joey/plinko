@@ -2,50 +2,7 @@
 
 .plinko-game-page {
     position: relative;
-    flex-grow: 1;
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    // min-height: calc(100vh - 50px);
-    min-height: calc(100vh - 0px);
-    // padding: 1rem;
-
-    --top-position: 0px;
-
-    @include media-breakpoint-up(lg) {
-        flex-direction: row;
-        align-items: center;
-        // background-color: rgb(160, 120, 73);
-    }
-
-    &.fullscreen {
-        --top-position: 0px;
-    }
-
-    &.show-sidebar {
-        .menu-card {
-            @include media-breakpoint-up(lg) {
-                overflow: auto;
-                display: initial;
-                // position: fixed;
-                // bottom: 0;
-                // left: 0;
-                // top: 50px;
-                flex-shrink: 0;
-                width: 300px;
-                // margin: 1rem;
-                padding: 1rem;
-                font-size: 0.8rem;
-                height: calc(100vh - var(--top-position));
-            }
-        }
-
-        .menu-bar {
-            @include media-breakpoint-up(lg) {
-                display: none;
-            }
-        }
-    }
 
     .background {
         // background-repeat: repeat;
@@ -77,211 +34,71 @@
         }
     }
 
-    .canvas-three-wrap {
-        border: 1px solid #000;
-        background-color: white;
-        margin-bottom: 3rem;
+    .touch-controls-ui {
         position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        // height: calc(100vh - 50px - var(--top-position));
-        width: 100%;
-
-        canvas {
-            height: 100%;
-            width: 100%;
-        }
-    }
-
-    .canvas-flat-wrap {
-        position: relative;
-        width: 100%;
-        max-width: 1400px;
-
-        canvas {
-            position: absolute;
-            left: 0;
-            top: 0;
-            // height: 500px;
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto;
-            display: block;
-            z-index: 1;
-            border: 2px solid rgb(0 0 0 / 47%);
-        }
-    }
-
-    canvas.fill {
-        background-color: rgb(255 255 255 / 35%);
-        position: initial !important;
-    }
-
-    .menu-card {
-        // background-color: var(--card-background-75);
-        border-bottom: 1px solid black;
-
-        @include media-breakpoint-down(lg) {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            position: fixed;
-            // width: 100%;
-            height: calc(100vh - 50px);
-            // height: calc(100vh - 30%);
-            overflow-y: auto;
-            // top: var(--top-position);
-            bottom: 50px;
-            // left: 50px;
-            // right: 50px;
-            left: 0;
-            right: 0;
-            transform: translateY(110%);
-            transition-duration: 200ms;
-            z-index: 10;
-        }
-
-        &.no-sidebar {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            position: fixed;
-            // width: 100%;
-            height: calc(100vh - 50px);
-            // height: calc(100vh - 30%);
-            overflow-y: auto;
-            // top: var(--top-position);
-            bottom: 50px;
-            // left: 50px;
-            // right: 50px;
-            left: 0;
-            right: 0;
-            transform: translateY(110%);
-            transition-duration: 200ms;
-            z-index: 10;
-        }
-
-        &.sidebar {
-
-            // display: flex;
-            // flex-direction: column;
-            // justify-content: flex-end;
-            // position: fixed;
-            // // width: 100%;
-            // height: calc(100vh - 100px);
-            // height: calc(100vh - 30%);
-            // overflow-y: auto;
-            // // top: var(--top-position);
-            // bottom: 50px;
-            // left: 50px;
-            // right: 50px;
-            // transform: translateY(110%);
-            // transition-duration: 200ms;
-            // z-index: 10;
-            // @include media-breakpoint-up(lg) {
-            //     display: none;
-            // }
-
-            .menu-card-background {
-                display: none;
-            }
-        }
-
-        // @include media-breakpoint-up(lg) {
-        //     display: none;
-        // }
-
-        .menu-card-background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: -1;
-        }
-
-        .wrap {
-            padding: 1rem;
-            overflow-y: auto;
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: var(--menu-card-background);
-
-            @include media-breakpoint-up(lg) {
-                padding: 0.5rem;
-                padding-bottom: 50px;
-            }
-
-            &::-webkit-scrollbar {
-                width: 10px;
-                // background-color: #04abf4;
-                background-color: #ffdf01;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                // background-color: #01628b;
-                background-color: #e48019;
-                border-radius: 5px;
-                box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.5) inset;
-            }
-        }
-
-        &.show {
-            transform: translateY(0%);
-        }
-
-        .camera-controls {
-            display: grid;
-            grid-gap: 5px 5px;
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-
-            h6 {
-                font-size: 0.8rem;
-            }
-
-        }
-
-    }
-
-    .menu-bar {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        left: 0;
-        height: 50px;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        z-index: 10;
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 0.1rem 0.5rem;
+        background-color: rgba(0, 100, 17, 0.5);
+        border-radius: 20px;
+        padding: 0.5rem;
 
-        // @include media-breakpoint-up(lg) {
-        //     display: none;
-        // }
+        .bet-amount-button {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
 
-        .redeem-buttons {
+    .canvas-wrap {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        // max-width: 500px;
+        // max-height: 800px;
+        width: 100vw;
+        height: calc(100vh - 0px);
+
+        .game-ui-overlay {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
             display: flex;
+            // flex-direction: column;
             justify-content: center;
             align-items: center;
+            background-color: rgba(0, 100, 17, 0.5);
+            border-radius: 20px;
+            padding: 0.5rem;
+            width: 350px;
 
-            .btn {
-                flex-shrink: 0;
+            // @include media-breakpoint-down(sm) {
+            //     transform: scale(0.85) translateX(-50%);
+            // }
+
+            .score {
+                margin-right: 1rem;
+                display: flex;
+                flex-wrap: nowrap;
+                font-size: 1rem;
+                color: white;
+                text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
             }
+        }
 
-            @include media-breakpoint-down(lg) {
-                transform: scale(0.95);
-                position: absolute;
-                top: -50px;
-                left: 0;
-                right: 0;
-            }
-
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
         }
     }
 

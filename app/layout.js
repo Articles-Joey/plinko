@@ -10,14 +10,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import "./globals.css";
 import "@/styles/index.scss";
 
-// import "@articles-media/articles-dev-box/dist/style.css";
+import "@articles-media/articles-dev-box/dist/style.css";
 
 import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css";
 
 import SocketLogicHandler from "@/components/SocketLogicHandler";
 import LayoutClient from './layout-client';
-import DarkModeHandler from '@/components/UI/DarkModeHandler';
-import GlobalClientModals from '@/components/UI/GlobalClientModals';
+// import DarkModeHandler from '@/components/UI/DarkModeHandler';
+// import GlobalClientModals from '@/components/UI/GlobalClientModals';
 import { Suspense } from 'react';
 
 // const geistSans = Geist({
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
 
       <head>
-        
+
         {/* <link
           rel="stylesheet"
           href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
@@ -52,11 +52,12 @@ export default function RootLayout({ children }) {
       // className={`${geistSans.variable} ${geistMono.variable}`}
       >
 
+        <LayoutClient />
+        <SocketLogicHandler />
+
         <Suspense>
-          <LayoutClient />
-          <SocketLogicHandler />
-          <DarkModeHandler />
-          <GlobalClientModals />
+          {/* <DarkModeHandler /> */}
+          {/* <GlobalClientModals /> */}
         </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

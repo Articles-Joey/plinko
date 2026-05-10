@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, memo, Suspense } from 'react';
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Cylinder, OrbitControls, Sky } from '@react-three/drei'
+import { Cylinder, OrbitControls, Sky, Stats } from '@react-three/drei'
 
 import { Debug, Physics } from '@react-three/cannon';
 
@@ -45,6 +45,8 @@ import { GamepadOrbitController } from './GamepadOrbitController';
 import BoardwalkLights from './BoardwalkLights';
 import CameraLogger from './CameraLogger';
 import { ModelSecurityCamera } from './Security Camera';
+import Player from './Player';
+import PlayerBoundary from './PlayerBoundary';
 
 function SpotLight(props) {
 
@@ -111,7 +113,11 @@ function GameCanvas({ scale, children }) {
     const balls = useStore(state => state.balls)
     const addBall = useStore(state => state.addBall)
     const debug = useStore(state => state.debug)
+    const showStats = useStore((state) => state?.debugConfig?.showStats);
+    const reloadScene = useStore(state => state.reloadScene)
     // setDebug = useStore(state => state.setDebug);
+    const controlType = useStore(state => state.controlType);
+    // const setControlType = useStore(state => state.setControlType);
 
     const [reload, setReload] = useState(false)
 
@@ -125,6 +131,11 @@ function GameCanvas({ scale, children }) {
         }
 
     }, [reload])
+
+    useHotkeys('r', () => {
+        console.log("Reload Scene!")
+        reloadScene()
+    });
 
     useHotkeys('3', () => {
         console.log("Ball")
@@ -383,7 +394,6 @@ function GameCanvas({ scale, children }) {
                 args={[90, 8, 0.25]}
             />
 
-
             <SlotPads
                 position={[0, -20, 5]}
                 args={[100, 8, 0.25]}
@@ -463,9 +473,11 @@ function GameCanvas({ scale, children }) {
     let physicsContent
     if (debug) {
         physicsContent = (
-            <Debug>
+            <>
+                {/* <Debug> */}
                 {gameContent}
-            </Debug>
+                {/* </Debug> */}
+            </>
         )
     } else {
         physicsContent = (
@@ -492,6 +504,10 @@ function GameCanvas({ scale, children }) {
                     }}
                 >
 
+                    {showStats && <>
+                        <Stats className="stats-overlay" />
+                    </>}
+
                     <hemisphereLight color="gray" groundColor="black" intensity={darkMode ? 0.5 : 1} />
 
                     <ambientLight intensity={darkMode ? 0 : 2} />
@@ -514,6 +530,20 @@ function GameCanvas({ scale, children }) {
                                 [0, 10, -200]
                         }
                     />
+
+                    <Physics
+                        gravity={[0, -30, 0]}
+                    >
+
+                        <Debug color="black" scale={debug ? 1 : 0}>
+                            <PlayerBoundary
+                                position={[
+                                    0, 34, 0
+                                ]}
+                            />
+                        </Debug>
+
+                    </Physics>
 
                     <group
                         rotation={[
@@ -547,9 +577,11 @@ function GameCanvas({ scale, children }) {
 
                         {/* <OrbitControls /> */}
 
+                        {/* Teleportation and Orbit */}
                         <CameraLogger />
 
                         <GamepadOrbitController />
+
                     </group>
 
                 </Canvas>

@@ -10,3 +10,11 @@ button {
 i {
     margin-right: 0.25rem;
 }
+
+.stats-overlay {
+    position: fixed;
+    top: 0;
+    right: 0 !important;
+    left: initial !important;
+    z-index: 4;
+}

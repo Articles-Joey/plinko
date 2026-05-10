@@ -2,40 +2,25 @@
 import { createWithEqualityFn as create } from 'zustand/traditional'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
+import typicalZustandStoreExcludes from '@articles-media/articles-dev-box/typicalZustandStoreExcludes';
+import typicalZustandStoreStateSlice from '@articles-media/articles-dev-box/typicalZustandStoreStateSlice';
+
+import randomNicknameConfig from '@/util/randomNicknameConfig';
+
 export const useStore = create()(
     persist(
         (set, get) => ({
 
-            _hasHydrated: false,
-            setHasHydrated: (state) => {
-                set({
-                    _hasHydrated: state
-                });
-            },
-
-            // Only available on larger screens
-            showSidebar: true,
-            setShowSidebar: (newValue) => {
-                set((prev) => ({
-                    showSidebar: newValue
-                }))
-            },
+            ...typicalZustandStoreStateSlice(
+                set,
+                get,
+                randomNicknameConfig,
+            ),
 
             betAmount: 10,
             setBetAmount: (amount) => {
                 set({ betAmount: amount })
             },
-
-            darkMode: true,
-            toggleDarkMode: () => set({ darkMode: !get().darkMode }),
-            setDarkMode: (mode) => set({ darkMode: mode }),
-
-
-            graphicsQuality: "High",
-            setGraphicsQuality: (value) => set({ graphicsQuality: value }),
-
-            theme: null,
-            setTheme: (theme) => set({ theme }),
 
             balls: [],
             addBall: (data) => {
@@ -61,11 +46,9 @@ export const useStore = create()(
                 set({ balls: [] })
             },
 
-            debug: false,
-            setDebug: () => {
-                set((prev) => ({
-                    debug: !prev.debug
-                }))
+            controlType: "Orbit",
+            setControlType: (type) => {
+                set({ controlType: type })
             },
 
             teleportLocation: false,
@@ -83,11 +66,6 @@ export const useStore = create()(
                 set({ teleportZoom: zoom })
             },
 
-            menuOpen: false,
-            setMenuOpen: (open) => {
-                set({ menuOpen: open })
-            },
-
             // Flat or Upright
             sceneOrientation: "Flat",
             setSceneOrientation: (orientation) => {
@@ -99,29 +77,20 @@ export const useStore = create()(
                 }))
             },
 
-            showSettingsModal: false,
-            setShowSettingsModal: (show) => {
-                set({ showSettingsModal: show })
-            },
-
-            setShowCreditsModal: (show) => {
-                set({ showCreditsModal: show })
-            },
-            showCreditsModal: false,
-
-            showInfoModal: false,
-            setShowInfoModal: (show) => {
-                set({ showInfoModal: show })
-            },
-
         }),
         {
             name: 'plinko-storage-articles-media', // name of the item in the storage (must be unique)
-            version: 1,
+            version: 2,
             onRehydrateStorage: (state) => {
                 return () => state.setHasHydrated(true)
-            }
-            // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+            },
+            partialize: (state) =>
+                Object.fromEntries(
+                    Object.entries(state).filter(([key]) => ![
+                        ...typicalZustandStoreExcludes,
+                        "balls"
+                    ].includes(key))
+                ),
         },
     ),
 )

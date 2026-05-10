@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, ContactShadows } from '@react-three/drei'
+// import Player from './Player'
 
 // import { Duck } from './PlayerModels/Duck'
 

@@ -5,6 +5,7 @@ import { useOfflineWallet } from "@/hooks/useOfflineWallet"
 import { add, differenceInHours, format } from "date-fns"
 import Countdown from "react-countdown"
 import RedeemBallButton from "./RedeemBallButton"
+import { useState } from "react"
 
 // function RedeemBallButton({
 //     className,
@@ -51,6 +52,8 @@ export default function OfflineBalance({
     const lastClaim = useOfflineWallet(state => state.lastClaim);
     const setLastClaim = useOfflineWallet(state => state.setLastClaim);
 
+    const [expanded, setExpanded] = useState(true);
+
     const betAmount = useStore(state => state.betAmount);
 
     function redeemBall(offline) {
@@ -79,9 +82,16 @@ export default function OfflineBalance({
     return (
         <div className="card card-articles card-sm mb-2">
 
-            <div className="card-header py-2 d-flex justify-content-between">
+            <div
+                className="card-header py-2 d-flex justify-content-between align-items-center cursor-pointer"
+                onClick={() => setExpanded(!expanded)}
+                style={{ cursor: 'pointer' }}
+            >
 
-                <h6 className='mb-0'>Offline Balance:</h6>
+                <h6 className='mb-0'>
+                    <i className={`fad fa-chevron-${expanded ? 'down' : 'right'} me-2`}></i>
+                    Offline Balance:
+                </h6>
 
                 <div className="badge bg-dark shadow-articles">
                     {wallet?.total}
@@ -89,86 +99,90 @@ export default function OfflineBalance({
 
             </div>
 
-            <div className="card-body pb-0 pt-1">
+            {expanded && (
+                <>
+                    <div className="card-body pb-0 pt-1">
 
-                <div className="small text-center">
-                    {`Offline Play`}
-                </div>
+                        <div className="small text-center">
+                            {`Offline Play`}
+                        </div>
 
-                <RedeemBallButton
-                    className={"w-100"}
-                    redeemBall={redeemBall}
-                    offline={true}
-                    sidebar={true}
-                />
+                        <RedeemBallButton
+                            className={"w-100"}
+                            redeemBall={redeemBall}
+                            offline={true}
+                            sidebar={true}
+                        />
 
-                <div className="small text-center">
-                    {`${balls.length || 0} Active Balls`}
-                </div>
+                        <div className="small text-center">
+                            {`${balls.length || 0} Active Balls`}
+                        </div>
 
-            </div>
-
-            <hr className="my-1" />
-
-            <div className="card-body pt-1">
-
-                <div className="small d-flex justify-content-between">
-
-                    <h6 className='mb-0'>Next Claim</h6>
-
-                    <div className="badge bg-dark shadow-articles">
-                        {/* <div><small>{format(new Date(), 'MM/dd/yy hh:mmaa')}</small></div> */}
-                        {wallet?.last_claim && <Countdown daysInHours={true} date={add(new Date(wallet.last_claim), { hours: 24 })} />}
                     </div>
 
-                </div>
+                    <hr className="my-1" />
 
-                <div><small>One claim per 24 hours</small></div>
+                    <div className="card-body pt-1">
 
-                {/* <div>+100 points</div> */}
-                <ArticlesButton
-                    disabled={
-                        (differenceInHours(new Date(), new Date(lastClaim)) < 24)
-                        &&
-                        lastClaim
-                    }
-                    className="mb-1 w-100"
-                    onClick={() => {
-                        claim()
-                    }}
-                >
-                    Claim 100 Points
-                </ArticlesButton>
+                        <div className="small d-flex justify-content-between">
 
-                <div className='lh-sm'>
-                    <div className='l'>
-                        <small>
-                            <span>Next claim: </span>
-                            {lastClaim ? format(add(new Date(lastClaim), { hours: 24 }), 'MM/dd/yy hh:mmaa') : 'Ready'}
-                        </small>
+                            <h6 className='mb-0'>Next Claim</h6>
+
+                            <div className="badge bg-dark shadow-articles">
+                                {/* <div><small>{format(new Date(), 'MM/dd/yy hh:mmaa')}</small></div> */}
+                                {wallet?.last_claim && <Countdown daysInHours={true} date={add(new Date(wallet.last_claim), { hours: 24 })} />}
+                            </div>
+
+                        </div>
+
+                        <div><small>One claim per 24 hours</small></div>
+
+                        {/* <div>+100 points</div> */}
+                        <ArticlesButton
+                            disabled={
+                                (differenceInHours(new Date(), new Date(lastClaim)) < 24)
+                                &&
+                                lastClaim
+                            }
+                            className="mb-1 w-100"
+                            onClick={() => {
+                                claim()
+                            }}
+                        >
+                            Claim 100 Points
+                        </ArticlesButton>
+
+                        <div className='lh-sm'>
+                            <div className='l'>
+                                <small>
+                                    <span>Next claim: </span>
+                                    {lastClaim ? format(add(new Date(lastClaim), { hours: 24 }), 'MM/dd/yy hh:mmaa') : 'Ready'}
+                                </small>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
 
-            </div>
+                    <div className="card-footer py-1 d-flex justify-content-center">
 
-            <div className="card-footer py-1 d-flex justify-content-center">
+                        <button
+                            className='btn btn-link'
+                            onClick={() => {
+                                setLastClaim(null)
+                                setWallet({
+                                    ...wallet,
+                                    total: 100
+                                })
+                                resetBalls()
+                                setBetAmount(10)
+                            }}
+                        >
+                            Reset
+                        </button>
 
-                <button
-                    className='btn btn-link'
-                    onClick={() => {
-                        setLastClaim(null)
-                        setWallet({
-                            ...wallet,
-                            total: 100
-                        })
-                        resetBalls()
-                        setBetAmount(10)
-                    }}
-                >
-                    Reset
-                </button>
-
-            </div>
+                    </div>
+                </>
+            )}
 
         </div>
     )

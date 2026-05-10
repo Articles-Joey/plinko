@@ -79,6 +79,12 @@ export default function CameraLogger() {
     }, [teleportZoom, camera])
 
     useFrame(() => {
+
+        const controlType = useStore.getState().controlType
+        if (controlType == "FPS") {
+            return
+        }
+
         if (controlsRef.current) {
             // Store camera position and target in zustand store
             setCameraPosition([
@@ -94,6 +100,11 @@ export default function CameraLogger() {
             ])
         }
     })
+
+    const controlType = useStore(state => state.controlType)
+    if (controlType == "FPS") {
+        return
+    }
 
     return <OrbitControls ref={controlsRef} makeDefault />
 }
