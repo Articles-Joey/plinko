@@ -189,10 +189,11 @@ export default function OnlineBalance({
                                 if (!userDetails?.user_id) {
                                     window.location.href = `${process.env.NEXT_PUBLIC_LOCAL_ACCOUNTS_ADDRESS}/login?redirect=${encodeURIComponent(window.location.href)}&type=subdomain`;
                                 } else {
-                                    fetch('/api/signout', { method: 'POST' })
-                                        .then(() => {
-                                            window.location.reload();
-                                        });
+                                    // fetch('/api/signout', { method: 'POST' })
+                                    //     .then(() => {
+                                    //         window.location.reload();
+                                    //     });
+                                    window.location.href = `/api/signout?redirect=${encodeURIComponent(window.location.href)}&type=subdomain`;
                                 }
                             }}
                         >

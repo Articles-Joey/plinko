@@ -1,14 +1,11 @@
-// import { ObjectId } from 'mongodb';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-// import { NextResponse } from 'next/server';
-// import clientPromise from '@/util/mongodb';
+import getSignOutRedirectUrl from '@articles-media/articles-dev-box/getSignOutRedirectUrl';
 
-// This will only work when called on a subdomain, not a partner OAuth application
-
-export async function POST(req) {
-    
-    cookies().delete('sess');
-    return NextResponse.redirect(new URL('/', req.url));
-
+export async function GET(req) {
+    try {
+        const redirectUrl = await getSignOutRedirectUrl(req);
+        return NextResponse.redirect(redirectUrl);
+    } catch (error) {
+        return NextResponse.json({ error: 'Signout failed' }, { status: 500 });
+    }
 }
