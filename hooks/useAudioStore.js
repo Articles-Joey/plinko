@@ -16,11 +16,24 @@ export const useAudioStore = create()(
         enabled: true,
         game_volume: 50,
         music_volume: 50,
-        sfx_volume: 50,
-        backgroundMusicVolume: 15,
-        soundEffectsVolume: 50,
+        // sfx_volume: 50,
+        // backgroundMusicVolume: 15,
+        // soundEffectsVolume: 50,
       },
       setAudioSettings: (newValue) => set({ audioSettings: newValue }),
+
+      resetAudioSettings: () => {
+        set({
+          audioSettings: {
+            enabled: true,
+            game_volume: 50,
+            music_volume: 50,
+            // sfx_volume: 50,
+            // backgroundMusicVolume: 15,
+            // soundEffectsVolume: 50,
+          }
+        })
+      },
 
     }),
     {

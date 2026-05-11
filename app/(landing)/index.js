@@ -5,12 +5,18 @@ import dynamic from 'next/dynamic'
 import ArticlesButton from '@/components/UI/Button';
 import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 import { useStore } from '@/hooks/useStore';
-import { useWallet } from '@/hooks/useWallet';
 import classNames from 'classnames';
 
 // const Ad = dynamic(() => import('components/Ads/Ad'), {
 //     ssr: false,
 // });
+
+import { useCameraStore } from '@/hooks/useCameraStore';
+import GameMenu from '@articles-media/articles-dev-box/GameMenu';
+import GameMenuContent from '@/components/UI/GameMenuContent';
+import GamepadHelper from '@/components/Game/GamepadHelper';
+import TouchControlsOverlay from '@/components/UI/TouchControlsOverlay';
+
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
     loading: () => <div className='w-100 h-100 d-flex justify-content-center align-items-center bg-black text-white'>
@@ -19,30 +25,10 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     </div>,
 });
 
-import { useOfflineWallet } from '@/hooks/useOfflineWallet';
-import { useRedeemBall } from '@/hooks/useRedeemBall';
-import RedeemBallButton from '@/components/UI/RedeemBallButton';
-import BetAmountButton from '@/components/UI/BetAmountButton';
-import { useCameraStore } from '@/hooks/useCameraStore';
-import GameMenu from '@articles-media/articles-dev-box/GameMenu';
-import GameMenuContent from '@/components/UI/GameMenuContent';
-import GamepadHelper from '@/components/Game/GamepadHelper';
-
-const ReturnToLauncherButton = dynamic(() =>
-    import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
-    { ssr: false }
-);
-
 export default function PlinkoPage(props) {
 
-    const redeemBall = useRedeemBall()
-
-    const { wallet } = useWallet()
-
-    const offlineWallet = useOfflineWallet(state => state.wallet);
-
+    const hasHydrated = useStore(state => state._hasHydrated)
     const showMenu = useStore(state => state.showMenu);
-    const setShowMenu = useStore(state => state.setShowMenu);
     const sceneKey = useStore(state => state.sceneKey);
     const sidebar = useStore(state => state.sidebar);
 
@@ -71,43 +57,20 @@ export default function PlinkoPage(props) {
                 sidebarConfig={{
                     style: "Floating Panel",
                 }}
-            />
-
-            <div className="touch-controls-ui">
-
-                {!showMenu && <div className='redeem-buttons'>
-                    <RedeemBallButton
-                        className={""}
-                        redeemBall={redeemBall}
-                    />
-                    <div className="badge bg-black me-4 ms-1">
-                        {wallet?.total} Points
-                    </div>
-
-                    <RedeemBallButton
-                        className={""}
-                        redeemBall={redeemBall}
-                        offline={true}
-                    />
-                    <div className="badge bg-black ms-1">
-                        {offlineWallet?.total} Points
-                    </div>
-                </div>}
-
-                <div className='bet-amount-button'>
-                    <BetAmountButton />
-                </div>
-
-            </div>
+            />            
 
             <div
                 className='canvas-wrap'
                 id="game-canvas"
             >
 
-                <GameCanvas
-                    key={sceneKey}
-                />
+                <TouchControlsOverlay />
+
+                {hasHydrated &&
+                    <GameCanvas
+                        key={sceneKey}
+                    />
+                }
 
             </div>
 

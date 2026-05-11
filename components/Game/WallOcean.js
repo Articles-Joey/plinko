@@ -11,7 +11,7 @@ const link = `${process.env.NEXT_PUBLIC_CDN}games/Race Game/waternormals.jpeg`
 
 export default function WallOcean(props) {
 
-    let position = [0, 50, 0.2]
+    let position = [0, 73, 0.2]
 
     const [ref] = usePlane(() => ({ rotation: [0, 0, 0], position: position, color: 'green' }));
     const gl = useThree((state) => state.gl)

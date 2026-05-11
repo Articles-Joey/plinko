@@ -77,6 +77,11 @@ export const useStore = create()(
                 }))
             },
 
+            loadDecorativeContent: false,
+            setLoadDecorativeContent: (load) => {
+                set({ loadDecorativeContent: load })
+            },
+
         }),
         {
             name: 'plinko-storage-articles-media', // name of the item in the storage (must be unique)
@@ -88,7 +93,8 @@ export const useStore = create()(
                 Object.fromEntries(
                     Object.entries(state).filter(([key]) => ![
                         ...typicalZustandStoreExcludes,
-                        "balls"
+                        "balls",
+                        "loadDecorativeContent",
                     ].includes(key))
                 ),
         },

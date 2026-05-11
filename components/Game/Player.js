@@ -5,6 +5,7 @@ import { useSphere } from "@react-three/cannon"
 import { PointerLockControls } from "@react-three/drei"
 const JUMP_FORCE = 20
 const SPEED = 10
+const SPRINT_MULTIPLIER = 2
 const direction = new THREE.Vector3()
 const frontVector = new THREE.Vector3()
 const sideVector = new THREE.Vector3()
@@ -33,11 +34,13 @@ export default function Player() {
     }
   }, [api])
 
-  // Simple keyboard state
-  const keys = useRef({ forward: false, backward: false, left: false, right: false, jump: false })
+  // Keyboard state — jumpReady resets on Space release, preventing mid-air re-jumps while holding
+  const keys = useRef({ forward: false, backward: false, left: false, right: false, jump: false, sprint: false })
+  const jumpReady = useRef(true)
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.repeat) return
       switch (e.code) {
         case "KeyW":
         case "ArrowUp":
@@ -57,6 +60,10 @@ export default function Player() {
           break
         case "Space":
           keys.current.jump = true
+          break
+        case "ShiftLeft":
+        case "ShiftRight":
+          keys.current.sprint = true
           break
       }
     }
@@ -80,6 +87,11 @@ export default function Player() {
           break
         case "Space":
           keys.current.jump = false
+          jumpReady.current = true
+          break
+        case "ShiftLeft":
+        case "ShiftRight":
+          keys.current.sprint = false
           break
       }
     }
@@ -92,19 +104,22 @@ export default function Player() {
   }, [])
 
   useFrame(() => {
-    const { forward, backward, left, right, jump } = keys.current
+    const { forward, backward, left, right, jump, sprint } = keys.current
 
     // Update camera position to match player
     camera.position.set(position.current[0], position.current[1] + 1.5, position.current[2])
 
-    // Movement calculation
+    // Movement calculation — sprint doubles speed
+    const speed = SPEED * (sprint ? SPRINT_MULTIPLIER : 1)
     frontVector.set(0, 0, Number(backward) - Number(forward))
     sideVector.set(Number(left) - Number(right), 0, 0)
-    direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(camera.rotation)
+    direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(speed).applyEuler(camera.rotation)
 
     api.velocity.set(direction.x, velocity.current[1], direction.z)
 
-    if (jump && Math.abs(velocity.current[1]) < 0.05) {
+    // jumpReady prevents re-jumping while Space is held; only fires when grounded
+    if (jump && jumpReady.current && Math.abs(velocity.current[1]) < 0.05) {
+      jumpReady.current = false
       api.velocity.set(velocity.current[0], JUMP_FORCE, velocity.current[2])
     }
   })

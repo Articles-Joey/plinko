@@ -24,6 +24,7 @@ export default function CameraLogger() {
 
     useEffect(() => {
         if (teleportLocation) {
+            console.log("Teleporting camera to:", teleportLocation)
             camera.position.set(...teleportLocation)
             camera.lookAt(0, 0, 0)
             setTeleportLocation(false)
@@ -31,12 +32,17 @@ export default function CameraLogger() {
     }, [teleportLocation])
 
     useEffect(() => {
-        if (teleportTarget && controlsRef.current) {
-            // Move the OrbitControls target to the new location
-            controlsRef.current.target.set(...teleportTarget)
-            camera.lookAt(...teleportTarget)
-            setTeleportTarget(false)
-        }
+
+        // return
+
+        if (!teleportTarget) return
+        // setTeleportTarget(false) // always reset so signal never gets stuck
+        // if (!controlsRef.current) return
+
+        controlsRef.current.target.set(...teleportTarget)
+        camera.lookAt(...teleportTarget)
+        setTeleportTarget(false)
+
     }, [teleportTarget, camera])
 
     // useEffect(() => {
@@ -52,52 +58,53 @@ export default function CameraLogger() {
     // }, [teleportZoom, camera])
 
     useEffect(() => {
-        if (teleportZoom && controlsRef.current) {
-            const controls = controlsRef.current
-            const target = controls.target
 
-            // 1. Set the limit so you CAN zoom in all the way
-            controls.minDistance = teleportZoom
+        if (!teleportZoom) return
+        setTeleportZoom(false) // always reset so signal never gets stuck
+        if (!controlsRef.current) return
 
-            // 2. Calculate the direction from target to camera
-            const direction = new Vector3()
-                .subVectors(camera.position, target)
-                .normalize()
+        const controls = controlsRef.current
+        const target = controls.target
 
-            // 3. Move camera to the "fully zoomed" position (minDistance away)
-            const newPos = new Vector3()
-                .copy(target)
-                .add(direction.multiplyScalar(controls.minDistance))
+        // Reset minDistance so previous teleports don't block this one
+        controls.minDistance = 0
 
-            camera.position.copy(newPos)
+        // Calculate direction from target to camera and position at teleportZoom distance
+        const direction = new Vector3()
+            .subVectors(camera.position, target)
+            .normalize()
 
-            // 4. Update controls to reflect manual camera change
-            controls.update()
+        const newPos = new Vector3()
+            .copy(target)
+            .add(direction.multiplyScalar(teleportZoom))
 
-            setTeleportZoom(false)
-        }
+        camera.position.copy(newPos)
+        controls.update()
     }, [teleportZoom, camera])
 
     useFrame(() => {
 
-        const controlType = useStore.getState().controlType
-        if (controlType == "FPS") {
-            return
-        }
+        // const controlType = useStore.getState().controlType
+        // if (controlType == "FPS") {
+        //     return
+        // }
 
         if (controlsRef.current) {
+
+            // console.log("New Camera position:", camera.position)
+
             // Store camera position and target in zustand store
-            setCameraPosition([
-                camera.position.x,
-                camera.position.y,
-                camera.position.z
-            ])
-            const target = controlsRef.current.target
-            setCameraTarget([
-                target.x,
-                target.y,
-                target.z
-            ])
+            // setCameraPosition([
+            //     camera.position.x,
+            //     camera.position.y,
+            //     camera.position.z
+            // ])
+            // const target = controlsRef.current.target
+            // setCameraTarget([
+            //     target.x,
+            //     target.y,
+            //     target.z
+            // ])
         }
     })
 

@@ -13,6 +13,8 @@ import GlobalBody from '@articles-media/articles-dev-box/GlobalBody';
 // import ToontownModeHandler from '@articles-media/articles-dev-box/ToontownModeHandler';
 import GlobalClientModals from '@articles-media/articles-dev-box/GlobalClientModals';
 import ArticlesButton from '@/components/UI/Button';
+import ControlsPanel from '@/components/UI/ControlsPanel';
+import { useControlsStore } from '@/hooks/useControlsStore';
 
 // import ModelCacheDebug from '@/components/UI/ModelCacheDebug';
 
@@ -95,60 +97,18 @@ export default function LayoutClient({ children }) {
                             'Audio': {
                                 sliders: [
                                     {
-                                        key: "gameVolume",
+                                        key: "game_volume",
                                         label: "Game Volume"
                                     },
                                     {
-                                        key: "musicVolume",
+                                        key: "music_volume",
                                         label: "Music Volume"
                                     }
                                 ]
                             },
                             'Controls': {
                                 touchControls: true,
-                                ControlsPanel: <div className="border p-0 mb-2">
-                                {[
-                                    {
-                                        action: 'Redeem Online Ball',
-                                        defaultKeyboardKey: '1'
-                                    },
-                                    {
-                                        action: 'Claim Online Points',
-                                        defaultKeyboardKey: '2'
-                                    },
-                                    {
-                                        action: 'Redeem Offline Ball',
-                                        defaultKeyboardKey: '3'
-                                    },
-                                    {
-                                        action: 'Claim Offline Points',
-                                        defaultKeyboardKey: '4'
-                                    },
-                                ].map(obj =>
-                                    <div key={obj.action}>
-                                        <div className="flex-header border-bottom p-1">
-
-                                            <div>
-                                                <div>{obj.action}</div>
-                                                {obj.emote && <div className="span badge bg-dark">Emote</div>}
-                                            </div>
-
-                                            <div>
-
-                                                <div className="badge badge-hover bg-articles me-1">{obj.defaultKeyboardKey}</div>
-
-                                                <ArticlesButton
-                                                    className=""
-                                                    small
-                                                >
-                                                    Change Key
-                                                </ArticlesButton>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                                </div>
+                                ControlsPanel: <ControlsPanel />
                                 // TODO - Fix controls
                                 // defaultKeyBindings: [
                                 //     {
@@ -180,10 +140,15 @@ export default function LayoutClient({ children }) {
                                     {/* <ModelCacheDebug /> */}
                                 </>,
                             }
+                        },
+                        reset: () => {
+                            console.log("123?")
+                            useControlsStore.getState().resetControls();
+                            useAudioStore.getState().resetAudioSettings();
                         }
                     }}
                     infoModalConfig={{
-                        previewImage: "img/preview.webp",
+                        previewImage: "img/preview.png",
                     }}
                 />
             </Suspense>

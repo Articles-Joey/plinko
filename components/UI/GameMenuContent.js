@@ -87,7 +87,14 @@ export default function GameMenuContent() {
                         <span>Reload Game</span>
                     </ArticlesButton>
 
-                    <div className='w-50'>
+                    <GameMenuPrimaryButtonGroup
+                        useStore={useStore}
+                        type="Landing"
+                        SettingsOverride={<></>}
+                        // LeaveGameOverride={<></>}
+                    />
+
+                    <div className='w-50 d-none'>
                         <DropdownButton
                             variant="articles w-100"
                             size='sm'
@@ -342,12 +349,12 @@ export default function GameMenuContent() {
                 {/* <GameScoreboard game="Plinko" /> */}
 
                 <div className='d-flex flex-wrap'>
-                    <GameMenuPrimaryButtonGroup
+                    {/* <GameMenuPrimaryButtonGroup
                         useStore={useStore}
                         type="Landing"
                         SettingsOverride={<></>}
                         // LeaveGameOverride={<></>}
-                    />
+                    /> */}
                 </div>
 
                 <ReturnToLauncherButton />

@@ -38,14 +38,18 @@ export default function WalkingCrowd() {
     const pickModel = () => (Math.random() < 0.5 ? 'man' : 'woman');
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    // Initialize clusters once; each cluster spawns 1-4 people with offsets based on crowdSpacing
+    // Initialize clusters once; each cluster spawns 1-4 people (or 1-2 if Medium quality) with offsets based on crowdSpacing
     const initial = useMemo(() => {
         const arr = [];
         for (let c = 0; c < CLUSTERS; c++) {
             const clusterJitter = (Math.random() - 0.5) * spacing * 0.4; // jitter cluster center along z
             const clusterCenterZ = MIN_MOTION + c * spacing + clusterJitter;
             const clusterCenterX = (Math.random() - 0.5) * X_SPREAD; // lateral center
-            const clusterSize = randInt(1, 4); // 1-4 people per cluster
+            let minSize = 1, maxSize = 4;
+            if (graphicsQuality === 'Medium') {
+                maxSize = 2; // cut crowd size in half for Medium
+            }
+            const clusterSize = randInt(minSize, maxSize); // 1-4 or 1-2 people per cluster
 
             for (let j = 0; j < clusterSize; j++) {
                 // center offsets so cluster is symmetrical
@@ -70,7 +74,7 @@ export default function WalkingCrowd() {
         }
         walkersRef.current = arr;
         return arr;
-    }, []);
+    }, [graphicsQuality]);
 
     // Update positions each frame without causing React re-renders
     useFrame(() => {
