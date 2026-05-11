@@ -96,14 +96,13 @@ export default function LayoutClient({ children }) {
                             },
                             'Audio': {
                                 sliders: [
-                                    {
-                                        key: "game_volume",
-                                        label: "Game Volume"
-                                    },
-                                    {
-                                        key: "music_volume",
-                                        label: "Music Volume"
-                                    }
+                                    ...useAudioStore.getState().audioSettings ?
+                                        Object.keys(useAudioStore.getState().audioSettings).filter(key => key !== "enabled").map(key => ({
+                                            key,
+                                            label: key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                                        }))
+                                        :
+                                        [],
                                 ]
                             },
                             'Controls': {
