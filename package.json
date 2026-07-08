@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack -p 3017",
-    "build": "next build --webpack",
+    "dev": "next dev -p 3017",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@articles-media/articles-dev-box": "^1.1.5",
+    "@articles-media/articles-dev-box": "^1.6.1",
     "@articles-media/articles-gamepad-helper": "^0.0.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -26,16 +26,16 @@
     "mongodb": "^7.1.0",
     "next": "^16.2.2",
     "qrcode.react": "^4.2.0",
-    "react": "^19.2.4",
+    "react": "^19.2.7",
     "react-bootstrap": "^2.10.10",
     "react-color": "^2.19.3",
     "react-countdown": "^2.3.6",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.2.7",
     "react-hotkeys-hook": "^5.1.0",
-    "sass": "^1.97.3",
+    "sass": "^1.101.0",
     "socket.io-client": "^4.8.1",
     "swr": "^2.4.1",
-    "three": "^0.182.0"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
