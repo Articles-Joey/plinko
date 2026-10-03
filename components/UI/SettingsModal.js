@@ -1,287 +1,109 @@
+"use client";
+
 import { useRef, useState } from "react";
-
-import { Modal, Form } from "react-bootstrap"
-
-import ArticlesButton from "@/components/UI/Button";
-import { useStore } from "@/hooks/useStore";
-
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Slider from "@mui/material/Slider";
+import Switch from "@mui/material/Switch";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useStore } from "@/hooks/useStore";
+import { useAudioStore } from "@/hooks/useAudioStore";
+import { useControlsStore } from "@/hooks/useControlsStore";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
+import ArticlesModal from "./ArticlesModal";
+import ArticlesButton from "./Button";
+import ControlsPanel from "./ControlsPanel";
 
-export default function FourFrogsSettingsModal({
-    show,
-    setShow,
-}) {
-
-    const [showModal, setShowModal] = useState(true)
-
-    // const [lightboxData, setLightboxData] = useState(null)
-
-    const [tab, setTab] = useState('Graphics')
-
-    const darkMode = useStore(state => state.darkMode);
-    const toggleDarkMode = useStore(state => state.toggleDarkMode);
-
-    const graphicsQuality = useStore(state => state.graphicsQuality);
-    const setGraphicsQuality = useStore(state => state.setGraphicsQuality);
-
-    const sceneOrientation = useStore(state => state.sceneOrientation);
-    const setSceneOrientation = useStore(state => state.setSceneOrientation);
-    const toggleSceneOrientation = useStore(state => state.toggleSceneOrientation);
-
+export default function SettingsModal({ show = true, setShow }) {
+    const [showModal, setShowModal] = useState(true);
+    const [tab, setTab] = useState("Graphics");
+    const darkMode = useStore((state) => state.darkMode);
+    const toggleDarkMode = useStore((state) => state.toggleDarkMode);
+    const graphicsQuality = useStore((state) => state.graphicsQuality);
+    const setGraphicsQuality = useStore((state) => state.setGraphicsQuality);
+    const sceneOrientation = useStore((state) => state.sceneOrientation);
+    const setSceneOrientation = useStore((state) => state.setSceneOrientation);
+    const audioSettings = useAudioStore((state) => state.audioSettings);
+    const setAudioSettings = useAudioStore((state) => state.setAudioSettings);
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
-        <>
-            {/* {lightboxData && (
-                <Lightbox
-                    mainSrc={lightboxData?.location}
-                    onCloseRequest={() => setLightboxData(null)}
-                    reactModalStyle={{
-                        overlay: {
-                            zIndex: '2000'
-                        }
-                    }}
-                />
-            )} */}
-
-            <Modal
-                className="articles-modal"
-                size='md'
-                show={showModal}
-                // To much jumping with little content for now
-                // centered
-                scrollable
-                onExited={() => {
-                    setShow(false)
-                }}
-                onHide={() => {
-                    setShowModal(false)
-                }}
-            >
-
-                <Modal.Header closeButton>
-                    <Modal.Title>Game Settings</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body className="flex-column p-0">
-
-                    <div className='p-2'>
-                        {[
-                            'Graphics',
-                            'Controls',
-                            'Audio',
-                            // 'Chat'
-                        ].map(item =>
-                            <ArticlesButton
-                                key={item}
-                                active={tab == item}
-                                onClick={() => { setTab(item) }}
-                            >
-                                {item}
-                            </ArticlesButton>
-                        )}
-                    </div>
-
-                    <hr className="my-0" />
-
-                    <div className="p-2">
-                        {tab == 'Graphics' &&
-                            <>
-                                <div className="">
-                                    <div className="d-flex align-items-center">
-                                        <Form.Check
-                                            // ref={el => elementsRef.current[4] = el}
-                                            type="switch"
-                                            id="dark-mode-switch"
-                                            label="Dark Mode"
-                                            // value={enabled}
-                                            checked={darkMode}
-                                            onChange={() => {
-                                                toggleDarkMode();
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="small mt-2">
-                                        {`Dark Mode changes the game's color scheme to be easier on the eyes in low light environments.`}
-                                    </div>
-                                </div>
-
-                                <hr className="my-2" />
-
-                                <div className="">
-                                    <div className="">Graphics Quality</div>
-                                    <div className="d-flex align-items-center">
-                                        <ArticlesButton
-                                            className=""
-                                            small
-                                            active={graphicsQuality == "Low"}
-                                            onClick={() => {
-                                                setGraphicsQuality("Low");
-                                            }}
-                                        >
-                                            Low
-                                        </ArticlesButton>
-                                        <ArticlesButton
-                                            className=""
-                                            small
-                                            active={graphicsQuality == "Medium"}
-                                            onClick={() => {
-                                                setGraphicsQuality("Medium");
-                                            }}
-                                        >
-                                            Medium
-                                        </ArticlesButton>
-                                        <ArticlesButton
-                                            className=""
-                                            small
-                                            active={graphicsQuality == "High"}
-                                            onClick={() => {
-                                                setGraphicsQuality("High");
-                                            }}
-                                        >
-                                            High
-                                        </ArticlesButton>
-                                    </div>
-                                    <div className="small mt-2">
-                                        {`Graphics Quality changes the quality of the game's graphics to suit your preference.`}
-                                    </div>
-                                </div>
-
-                                <hr className="my-2" />
-
-                                <div className="">
-                                    <div className="">Scene Orientation</div>
-                                    <div className="d-flex align-items-center">
-                                        <ArticlesButton
-                                            className=""
-                                            small
-                                            active={sceneOrientation == "Flat"}
-                                            onClick={() => {
-                                                setSceneOrientation("Flat");
-                                            }}
-                                        >
-                                            Flat
-                                        </ArticlesButton>
-                                        <ArticlesButton
-                                            className=""
-                                            small
-                                            active={sceneOrientation == "Upright"}
-                                            onClick={() => {
-                                                setSceneOrientation("Upright");
-                                            }}
-                                        >
-                                            Upright
-                                        </ArticlesButton>
-                                    </div>
-                                    <div className="small mt-2">
-                                        {`SceneOrientation changes the orientation of the game scene to suit your preference.`}
-                                    </div>
-                                </div>
-                            </>
-                        }
-                        {tab == 'Controls' &&
-                            <div>
-                                {[
-                                    {
-                                        action: 'Redeem Online Ball',
-                                        defaultKeyboardKey: '1'
-                                    },
-                                    {
-                                        action: 'Claim Online Points',
-                                        defaultKeyboardKey: '2'
-                                    },
-                                    {
-                                        action: 'Redeem Offline Ball',
-                                        defaultKeyboardKey: '3'
-                                    },
-                                    {
-                                        action: 'Claim Offline Points',
-                                        defaultKeyboardKey: '4'
-                                    },
-                                ].map(obj =>
-                                    <div key={obj.action}>
-                                        <div className="flex-header border-bottom pb-1 mb-1">
-
-                                            <div>
-                                                <div>{obj.action}</div>
-                                                {obj.emote && <div className="span badge bg-dark">Emote</div>}
-                                            </div>
-
-                                            <div>
-
-                                                <div className="badge badge-hover bg-articles me-1">{obj.defaultKeyboardKey}</div>
-
-                                                <ArticlesButton
-                                                    className=""
-                                                    small
-                                                >
-                                                    Change Key
-                                                </ArticlesButton>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        }
-                        {tab == 'Audio' &&
-                            <>
-                                <Form.Label className="mb-0">Game Volume</Form.Label>
-                                <Form.Range />
-                                <Form.Label className="mb-0">Music Volume</Form.Label>
-                                <Form.Range />
-                            </>
-                        }
-                        {tab == 'Chat' &&
-                            <>
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Game chat panel"
-                                />
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Censor chat"
-                                />
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Game chat speech bubbles"
-                                />
-                            </>
-                        }
-                    </div>
-
-                </Modal.Body>
-
-                <Modal.Footer className="justify-content-between">
-
+        <ArticlesModal
+            title="Game Settings"
+            show={show && showModal}
+            centered={false}
+            setShow={(visible) => { setShow(visible); setShowModal(true); }}
+            sx={{ p: 0 }}
+            footerOverride={(setOpen) => (
+                <>
                     <ArticlesButton
+                        ref={(element) => { elementsRef.current[0] = element; }}
                         variant="outline-dark"
-                        onClick={() => {
-                            setShow(false)
-                        }}
+                        onClick={() => setOpen(false)}
+                        startIcon={<Box component="img" src={B.src} alt="" sx={{ width: 24 }} />}
                     >
-                        <img src={B} className="me-1" alt="Close" />
                         Close
                     </ArticlesButton>
-
                     <ArticlesButton
-                        variant="outline-danger ms-3"
+                        ref={(element) => { elementsRef.current[1] = element; }}
+                        variant="outline-danger"
+                        sx={{ ml: 2 }}
                         onClick={() => {
-                            setShow(false)
+                            useControlsStore.getState().resetControls();
+                            useAudioStore.getState().resetAudioSettings();
                         }}
                     >
                         Reset
                     </ArticlesButton>
-
-                </Modal.Footer>
-
-            </Modal>
-        </>
-    )
-
+                </>
+            )}
+        >
+            <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Game settings">
+                {["Graphics", "Controls", "Audio"].map((item) => <Tab key={item} value={item} label={item} />)}
+            </Tabs>
+            <Divider />
+            <Box sx={{ p: 1 }}>
+                {tab === "Graphics" && (
+                    <>
+                        <FormControlLabel control={<Switch checked={Boolean(darkMode)} onChange={toggleDarkMode} />} label="Dark Mode" />
+                        <Typography sx={{ fontSize: "0.875rem", mt: 1 }}>Dark Mode changes the game's color scheme to be easier on the eyes in low light environments.</Typography>
+                        <Divider sx={{ my: 1 }} />
+                        <Typography>Graphics Quality</Typography>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            {["Low", "Medium", "High"].map((quality) => (
+                                <ArticlesButton key={quality} small active={graphicsQuality === quality} onClick={() => setGraphicsQuality(quality)}>{quality}</ArticlesButton>
+                            ))}
+                        </Box>
+                        <Typography sx={{ fontSize: "0.875rem", mt: 1 }}>Graphics Quality changes the quality of the game's graphics to suit your preference.</Typography>
+                        <Divider sx={{ my: 1 }} />
+                        <Typography>Scene Orientation</Typography>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            {["Flat", "Upright"].map((orientation) => (
+                                <ArticlesButton key={orientation} small active={sceneOrientation === orientation} onClick={() => setSceneOrientation(orientation)}>{orientation}</ArticlesButton>
+                            ))}
+                        </Box>
+                        <Typography sx={{ fontSize: "0.875rem", mt: 1 }}>Scene orientation changes the orientation of the game scene to suit your preference.</Typography>
+                    </>
+                )}
+                {tab === "Controls" && <ControlsPanel />}
+                {tab === "Audio" && ["game_volume", "music_volume"].map((key) => (
+                    <Box key={key}>
+                        <Typography id={key}>{key === "game_volume" ? "Game Volume" : "Music Volume"}</Typography>
+                        <Slider
+                            aria-labelledby={key}
+                            value={audioSettings[key]}
+                            min={0}
+                            max={100}
+                            onChange={(_, value) => setAudioSettings({ ...audioSettings, [key]: value })}
+                        />
+                    </Box>
+                ))}
+            </Box>
+        </ArticlesModal>
+    );
 }

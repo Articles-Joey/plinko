@@ -1,6 +1,9 @@
+"use client";
+
+import Box from "@mui/material/Box";
 import { useState, useEffect, useCallback } from 'react';
 import ArticlesButton from "./Button";
-import { useControlsStore } from '../../hooks/useControlsStore';
+import { useControlsStore } from '@/hooks/useControlsStore';
 
 const ACTIONS = [
     { action: 'Redeem Online Ball' },
@@ -43,32 +46,32 @@ export default function ControlsPanel() {
     }, [listening, handleKeyDown]);
 
     return (
-        <div className="border p-0 mb-3">
+        <Box sx={{ border: 1, borderColor: "divider", p: "0", mb: "1rem" }}>
             {listening && (
-                <div
-                    className="p-2 text-center small"
-                    style={{ cursor: 'pointer' }}
+                <Box
+                    sx={{"p":"0.5rem","textAlign":"center","fontSize":"0.875em", cursor: "pointer"}}
+
                     onClick={cancelListening}
                 >
                     Press any key for <strong>{listening}</strong> &mdash; or click here to cancel
-                </div>
+                </Box>
             )}
             {ACTIONS.map(({ action }) => {
                 const key = mappings[action];
                 const isListening = listening === action;
                 return (
-                    <div key={action}>
-                        <div className="flex-header border-bottom p-1">
+                    <Box key={action}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: 1, borderColor: "divider", p: "0.25rem" }}>
 
-                            <div>
-                                <div>{action}</div>
-                            </div>
+                            <Box>
+                                <Box>{action}</Box>
+                            </Box>
 
-                            <div className="d-flex align-items-center gap-1">
+                            <Box sx={{"display":"flex","alignItems":"center", gap: "0.25rem"}}>
 
-                                <div className={`badge badge-hover me-1 ${isListening ? 'bg-warning text-dark' : 'bg-articles'}`}>
+                                <Box sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, borderRadius: "0.375rem", mr: "0.25rem", bgcolor: isListening ? "warning.main" : "primary.main", color: "#212529", "&:hover": { filter: "brightness(0.9)" } }}>
                                     {isListening ? '...' : (key ?? 'None')}
-                                </div>
+                                </Box>
 
                                 {key && !isListening && (
                                     <ArticlesButton
@@ -87,11 +90,11 @@ export default function ControlsPanel() {
                                     {isListening ? 'Cancel' : 'Change Key'}
                                 </ArticlesButton>
 
-                            </div>
-                        </div>
-                    </div>
+                            </Box>
+                        </Box>
+                    </Box>
                 );
             })}
-        </div>
+        </Box>
     );
 }

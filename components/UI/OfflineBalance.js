@@ -1,4 +1,10 @@
-// import { useWallet } from "@/hooks/useWallet"
+"use client";
+
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArticlesButton from "./Button"
 import { useStore } from "@/hooks/useStore"
 import { useOfflineWallet } from "@/hooks/useOfflineWallet"
@@ -7,40 +13,7 @@ import Countdown from "react-countdown"
 import RedeemBallButton from "./RedeemBallButton"
 import { useState } from "react"
 
-// function RedeemBallButton({
-//     className,
-//     redeemBall,
-//     disabled
-// }) {
-
-//     const betAmount = useStore(state => state.betAmount);
-
-//     return (
-//         <ArticlesButton
-//             className={className}
-//             disabled={disabled}
-//             onClick={() => {
-//                 redeemBall(true)
-//             }}
-//         >
-//             <span>Redeem Ball</span>
-//             <span className="ms-2 badge bg-dark shadow-articles">
-//                 -{betAmount} Points
-//             </span>
-//         </ArticlesButton>
-//     )
-// }
-
-export default function OfflineBalance({
-
-}) {
-
-    // const { 
-    //     wallet, 
-    //     setWallet,
-    //     setLastClaim,
-    //     lastClaim
-    // } = useOfflineWallet()
+export default function OfflineBalance() {
 
     const balls = useStore(state => state.balls);
     const resetBalls = useStore(state => state.resetBalls);
@@ -80,71 +53,70 @@ export default function OfflineBalance({
     }
 
     return (
-        <div className="card card-articles card-sm mb-2">
+        <Box sx={{ display: "flex", flexDirection: "column", minWidth: 0, bgcolor: "game.card", border: 1, borderColor: "divider", borderRadius: "0.375rem", backgroundImage: "none", mb: "0.5rem" }}>
 
-            <div
-                className="card-header py-2 d-flex justify-content-between align-items-center cursor-pointer"
+            <Box
+                sx={{ px: "0.5rem", py: "0.5rem", borderBottom: 1, borderColor: "divider", bgcolor: "rgba(0, 0, 0, 0.03)", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}
                 onClick={() => setExpanded(!expanded)}
-                style={{ cursor: 'pointer' }}
+
             >
 
-                <h6 className='mb-0'>
-                    <i className={`fad fa-chevron-${expanded ? 'down' : 'right'} me-2`}></i>
+                <Typography component="h6" variant="subtitle2" sx={{ mb: "0" }}>
+                    {expanded ? <ExpandMoreIcon sx={{ mr: "0.5rem", verticalAlign: "middle" }} /> : <ChevronRightIcon sx={{ mr: "0.5rem", verticalAlign: "middle" }} />}
                     Offline Balance:
-                </h6>
+                </Typography>
 
-                <div className="badge bg-dark shadow-articles">
+                <Box sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#212529", color: "#fff", boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 3px rgba(0, 0, 0, 0.2)" }}>
                     {wallet?.total}
-                </div>
+                </Box>
 
-            </div>
+            </Box>
 
             {expanded && (
                 <>
-                    <div className="card-body pb-0 pt-1">
+                    <Box sx={{ p: "0.5rem", pb: "0", pt: "0.25rem" }}>
 
-                        <div className="small text-center">
+                        <Box sx={{ fontSize: "0.875em", textAlign: "center" }}>
                             {`Offline Play`}
-                        </div>
+                        </Box>
 
                         <RedeemBallButton
-                            className={"w-100"}
+                            sx={{ width: "100%" }}
                             redeemBall={redeemBall}
                             offline={true}
                             sidebar={true}
                         />
 
-                        <div className="small text-center">
+                        <Box sx={{ fontSize: "0.875em", textAlign: "center" }}>
                             {`${balls.length || 0} Active Balls`}
-                        </div>
+                        </Box>
 
-                    </div>
+                    </Box>
 
-                    <hr className="my-1" />
+                    <Divider sx={{ my: "0.25rem" }} />
 
-                    <div className="card-body pt-1">
+                    <Box sx={{ p: "0.5rem", pt: "0.25rem" }}>
 
-                        <div className="small d-flex justify-content-between">
+                        <Box sx={{ fontSize: "0.875em", display: "flex", justifyContent: "space-between" }}>
 
-                            <h6 className='mb-0'>Next Claim</h6>
+                            <Typography component="h6" variant="subtitle2" sx={{ mb: "0" }}>Next Claim</Typography>
 
-                            <div className="badge bg-dark shadow-articles">
-                                {/* <div><small>{format(new Date(), 'MM/dd/yy hh:mmaa')}</small></div> */}
+                            <Box sx={{ display: "inline-block", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, lineHeight: 1, textAlign: "center", whiteSpace: "nowrap", verticalAlign: "baseline", borderRadius: "0.375rem", bgcolor: "#212529", color: "#fff", boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 3px rgba(0, 0, 0, 0.2)" }}>
+
                                 {wallet?.last_claim && <Countdown daysInHours={true} date={add(new Date(wallet.last_claim), { hours: 24 })} />}
-                            </div>
+                            </Box>
 
-                        </div>
+                        </Box>
 
-                        <div><small>One claim per 24 hours</small></div>
+                        <Box><Box component="small">One claim per 24 hours</Box></Box>
 
-                        {/* <div>+100 points</div> */}
                         <ArticlesButton
                             disabled={
                                 (differenceInHours(new Date(), new Date(lastClaim)) < 24)
                                 &&
                                 lastClaim
                             }
-                            className="mb-1 w-100"
+                            sx={{ mb: "0.25rem", width: "100%" }}
                             onClick={() => {
                                 claim()
                             }}
@@ -152,21 +124,23 @@ export default function OfflineBalance({
                             Claim 100 Points
                         </ArticlesButton>
 
-                        <div className='lh-sm'>
-                            <div className='l'>
-                                <small>
-                                    <span>Next claim: </span>
+                        <Box sx={{ lineHeight: 1.25 }}>
+                            <Box>
+                                <Box component="small">
+                                    <Box component="span">Next claim: </Box>
                                     {lastClaim ? format(add(new Date(lastClaim), { hours: 24 }), 'MM/dd/yy hh:mmaa') : 'Ready'}
-                                </small>
-                            </div>
-                        </div>
+                                </Box>
+                            </Box>
+                        </Box>
 
-                    </div>
+                    </Box>
 
-                    <div className="card-footer py-1 d-flex justify-content-center">
+                    <Box sx={{ px: "0.5rem", py: "0.25rem", borderTop: 1, borderColor: "divider", display: "flex", justifyContent: "center" }}>
 
-                        <button
-                            className='btn btn-link'
+                        <ArticlesButton
+                            variant="link"
+                            sx={{ color: "text.primary" }}
+
                             onClick={() => {
                                 setLastClaim(null)
                                 setWallet({
@@ -178,12 +152,12 @@ export default function OfflineBalance({
                             }}
                         >
                             Reset
-                        </button>
+                        </ArticlesButton>
 
-                    </div>
+                    </Box>
                 </>
             )}
 
-        </div>
+        </Box>
     )
 }

@@ -1,61 +1,28 @@
+"use client";
+
+import PublicIcon from "@mui/icons-material/Public";
+import SignalWifiOffIcon from "@mui/icons-material/SignalWifiOff";
 import { useStore } from "@/hooks/useStore";
-import ArticlesButton from "./Button";
 import { useWallet } from "@/hooks/useWallet";
 import { useOfflineWallet } from "@/hooks/useOfflineWallet";
+import ArticlesButton from "./Button";
 
-function RedeemBallButton({
-    className,
-    redeemBall,
-    offline,
-    sidebar
-}) {
-
-    const betAmount = useStore(state => state.betAmount);
-
-    const onlineWallet = useWallet(state => state.wallet)
-    const offlineWallet = useOfflineWallet(state => state.wallet);
-
-    const isDisabled = (
-        offline ?
-            (offlineWallet.total < betAmount)
-            :
-            (onlineWallet.total < betAmount)
-    )
+export default function RedeemBallButton({ className, sx, redeemBall, offline, sidebar }) {
+    const betAmount = useStore((state) => state.betAmount);
+    const onlineWallet = useWallet((state) => state.wallet);
+    const offlineWallet = useOfflineWallet((state) => state.wallet);
+    const isDisabled = offline ? offlineWallet.total < betAmount : onlineWallet.total < betAmount;
 
     return (
         <ArticlesButton
             className={className}
+            sx={sx}
             small
             disabled={isDisabled}
-            onClick={() => {
-                redeemBall(true)
-            }}
+            onClick={() => redeemBall(Boolean(offline))}
+            startIcon={sidebar ? undefined : offline ? <SignalWifiOffIcon /> : <PublicIcon />}
         >
-
-            {
-                sidebar ?
-                    <>
-                        <span>Redeem Ball</span>
-                    </>
-                    :
-                    <>
-                        {offline ?
-                            <i className="fad fa-signal-slash"></i>
-                            :
-                            <i className="fad fa-globe-americas"></i>
-                        }
-
-                        <span>{offline ? "Offline" : "Online"}</span>
-                    </>
-            }
-
-
-            {/* <span className="ms-2 badge bg-dark shadow-articles">
-                -{betAmount} Points
-            </span> */}
-
+            {sidebar ? "Redeem Ball" : offline ? "Offline" : "Online"}
         </ArticlesButton>
-    )
+    );
 }
-
-export default RedeemBallButton;
