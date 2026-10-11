@@ -14,6 +14,7 @@ import GlobalClientModals from "@articles-media/articles-dev-box/GlobalClientMod
 import ArticlesButton from "@/components/UI/Button";
 import ControlsPanel from "@/components/UI/ControlsPanel";
 import HotkeyHandler from '@articles-media/articles-dev-box/HotkeyHandler';
+import { useHotkeys } from "react-hotkeys-hook";
 
 export default function LayoutClient() {
     const sceneOrientation = useStore((state) => state.sceneOrientation);

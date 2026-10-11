@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useControlsStore } from "@/hooks/useControlsStore";
 import { useStore } from "@/hooks/useStore";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useOfflineWallet } from "@/hooks/useOfflineWallet";
 import { add, format } from "date-fns";
 
