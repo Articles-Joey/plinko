@@ -9,16 +9,16 @@ export default function KeyboardInputHandler() {
 
     const mappings = useControlsStore((s) => s.mappings);
 
-    const reloadScene = useStore(state => state.reloadScene)
+    // const reloadScene = useStore(state => state.reloadScene)
     const addBall = useStore(state => state.addBall);
 
     // const wallet = useOfflineWallet(state => state.wallet);
     const setOfflineWallet = useOfflineWallet(state => state.setWallet);
 
-    useHotkeys('r', () => {
-        console.log("Reload Scene!")
-        reloadScene()
-    });
+    // useHotkeys('r', () => {
+    //     console.log("Reload Scene!")
+    //     reloadScene()
+    // });
 
     useEffect(() => {
         // Build reverse map: bound key -> action name

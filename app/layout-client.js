@@ -13,6 +13,7 @@ import GlobalBody from "@articles-media/articles-dev-box/GlobalBody";
 import GlobalClientModals from "@articles-media/articles-dev-box/GlobalClientModals";
 import ArticlesButton from "@/components/UI/Button";
 import ControlsPanel from "@/components/UI/ControlsPanel";
+import HotkeyHandler from '@articles-media/articles-dev-box/HotkeyHandler';
 
 export default function LayoutClient() {
     const sceneOrientation = useStore((state) => state.sceneOrientation);
@@ -24,6 +25,7 @@ export default function LayoutClient() {
             <GlobalBody />
             <DarkModeHandler useStore={useStore} />
             <Suspense>
+                <HotkeyHandler useStore={useStore} useHotkeys={useHotkeys} />
                 <GlobalClientModals
                     useStore={useStore}
                     useAudioStore={useAudioStore}
